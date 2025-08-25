@@ -40,24 +40,18 @@ export default function Home() {
 
   return (
     <main className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">🚍 Sistema de Transporte</h1>
-
-      <nav className="flex gap-6 mb-8 text-blue-600 underline">
-        <a href="/vehiculos">Gestión de Flota</a>
-        <a href="/viajes">Seguimiento de Viajes</a>
-      </nav>
-
+      
       {/* Usuarios */}
       <section className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Usuarios</h2>
+        <h2 className="text-2xl font-semibold m-4">Usuarios</h2>
 
         {usuarios.length === 0 ? (
-          <p className="text-gray-500">No hay usuarios registrados.</p>
+          <p className="text-red-500">No hay usuarios registrados.</p>
         ) : (
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="border px-3 py-2">Nombre</th>
+              <tr className="bg-gray-200 text-left">
+                <th className="border px-5 py-2">Nombre</th>
                 <th className="border px-3 py-2">Email</th>
                 <th className="border px-3 py-2">Rol</th>
                 <th className="border px-3 py-2">Edad</th>
@@ -103,14 +97,9 @@ export default function Home() {
             value={rol}
             onChange={(e) => setRol(e.target.value)}
           >
-            <option value="admin">Admin</option>
-            <option value="chofer">Chofer</option>
-            <option value="chofer">Mecanico</option>
-            <option value="chofer">nacho</option>
-            <option value="chofer">pepers
-            </option>
-
-
+            <option value="Admin">Admin</option>
+            <option value="Chofer">Chofer</option>
+            <option value="Mecanico">Mecanico</option>
           </select>
 
           <input
