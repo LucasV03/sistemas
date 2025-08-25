@@ -107,6 +107,9 @@ export default function Home() {
             <option value="chofer">Chofer</option>
             <option value="chofer">Mecanico</option>
             <option value="chofer">nacho</option>
+            <option value="chofer">pepers
+            </option>
+
 
           </select>
 
