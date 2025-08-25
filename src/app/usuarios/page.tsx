@@ -102,15 +102,6 @@ export default function UsuariosPage() {
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-
-      <select
-        className="border rounded px-3 py-2 w-full"
-        value={rol}
-        onChange={(e) => setRol(e.target.value)}>
-        <option value="Admin">Admin</option>
-        <option value="Chofer">Chofer</option>
-        <option value="Mecanico">Mecanico</option>
-      </select>
           <select
             className="border rounded px-3 py-2 w-full"
             value={rol}
