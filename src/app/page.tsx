@@ -1,57 +1,127 @@
 "use client";
 
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api"; // ajusta ruta si usas tsconfig con alias
-import Image from "next/image";
+import { api } from "../../convex/_generated/api";
+import { useState } from "react";
 
 export default function Home() {
-  // 👇 hooks de Convex siempre van arriba del return
   const usuarios = useQuery(api.usuarios.listar, {});
   const addUsuario = useMutation(api.usuarios.crear);
 
+  // Estados del formulario
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [rol, setRol] = useState("chofer");
+  const [edad, setEdad] = useState("");
+
   if (usuarios === undefined) {
-    return <div>Cargando...</div>;
+    return (
+      <main className="p-6 max-w-4xl mx-auto">
+        <p className="text-gray-500">Cargando usuarios...</p>
+      </main>
+    );
   }
 
+  const handleAddUsuario = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await addUsuario({
+      nombre,
+      email,
+      rol,
+      edad: edad ? parseInt(edad) : undefined,
+    });
+    // Reset form
+    setNombre("");
+    setEmail("");
+    setRol("chofer");
+    setEdad("");
+  };
+
   return (
-    <main className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold">Sistema de Transporte</h1>
-      
+    <main className="p-6 max-w-5xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">🚍 Sistema de Transporte</h1>
 
-      <div className="mt-6 grid gap-4">
-        <a href="/vehiculos" className="underline">
-          Gestión de Flota
-        </a>
-        <a href="/viajes" className="underline">
-          Seguimiento de Viajes
-        </a>
-      </div>
+      <nav className="flex gap-6 mb-8 text-blue-600 underline">
+        <a href="/vehiculos">Gestión de Flota</a>
+        <a href="/viajes">Seguimiento de Viajes</a>
+      </nav>
 
-      {/* Sección de usuarios */}
-      <div className="mt-10">
-        <h2 className="text-xl font-semibold">Usuarios</h2>
-        <ul>
-          {usuarios.map((u) => (
-            <li key={u._id}>
-              {u.nombre} - {u.email} - {u.rol} - {u.edad}
-            </li>
-          ))}
-        </ul>
-        
-        <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-          onClick={() =>
-            addUsuario({
-              nombre: "Lucas",
-              edad: 25,
-              email: "lucas@lucas",
-              rol: "admin",
-            })
-          }
-        >
-          Agregar usuario
-        </button>
-      </div>
+      {/* Usuarios */}
+      <section className="bg-white shadow rounded-lg p-6">
+        <h2 className="text-2xl font-semibold mb-4">Usuarios</h2>
+
+        {usuarios.length === 0 ? (
+          <p className="text-gray-500">No hay usuarios registrados.</p>
+        ) : (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="border px-3 py-2">Nombre</th>
+                <th className="border px-3 py-2">Email</th>
+                <th className="border px-3 py-2">Rol</th>
+                <th className="border px-3 py-2">Edad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {usuarios.map((u) => (
+                <tr key={u._id} className="hover:bg-gray-50">
+                  <td className="border px-3 py-2">{u.nombre}</td>
+                  <td className="border px-3 py-2">{u.email}</td>
+                  <td className="border px-3 py-2 capitalize">{u.rol}</td>
+                  <td className="border px-3 py-2">{u.edad ?? "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {/* Formulario */}
+        <form onSubmit={handleAddUsuario} className="mt-6 space-y-3">
+          <h3 className="text-lg font-medium">Agregar usuario</h3>
+
+          <input
+            type="text"
+            placeholder="Nombre"
+            className="border rounded px-3 py-2 w-full"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            className="border rounded px-3 py-2 w-full"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <select
+            className="border rounded px-3 py-2 w-full"
+            value={rol}
+            onChange={(e) => setRol(e.target.value)}
+          >
+            <option value="admin">Admin</option>
+            <option value="chofer">Chofer</option>
+          </select>
+
+          <input
+            type="number"
+            placeholder="Edad"
+            className="border rounded px-3 py-2 w-full"
+            value={edad}
+            onChange={(e) => setEdad(e.target.value)}
+          />
+
+          <button
+            type="submit"
+            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Guardar
+          </button>
+        </form>
+      </section>
     </main>
   );
 }
