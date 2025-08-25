@@ -12,7 +12,7 @@ export default function Home() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [rol, setRol] = useState("chofer");
-  const [edad, setEdad] = useState("");
+  
 
   if (usuarios === undefined) {
     return (
@@ -28,14 +28,14 @@ export default function Home() {
       nombre,
       email,
       rol,
-      edad: edad ? parseInt(edad) : 0, 
+      
       
     });
    
     setNombre("");
     setEmail("");
     setRol("chofer");
-    setEdad("");
+    
   };
 
   return (
@@ -54,7 +54,7 @@ export default function Home() {
                 <th className="border px-5 py-2">Nombre</th>
                 <th className="border px-3 py-2">Email</th>
                 <th className="border px-3 py-2">Rol</th>
-                <th className="border px-3 py-2">Edad</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -63,7 +63,7 @@ export default function Home() {
                   <td className="border px-3 py-2">{u.nombre}</td>
                   <td className="border px-3 py-2">{u.email}</td>
                   <td className="border px-3 py-2 capitalize">{u.rol}</td>
-                  <td className="border px-3 py-2">{u.edad ?? "-"}</td>
+                  
                 </tr>
               ))}
             </tbody>
@@ -102,13 +102,7 @@ export default function Home() {
             <option value="Mecanico">Mecanico</option>
           </select>
 
-          <input
-            type="number"
-            placeholder="Edad"
-            className="border rounded px-3 py-2 w-full"
-            value={edad}
-            onChange={(e) => setEdad(e.target.value)}
-          />
+          
 
           <button
             type="submit"

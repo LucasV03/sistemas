@@ -6,7 +6,7 @@ export default defineSchema({
 
     usuarios: defineTable({
         nombre: v.string(),
-        edad: v.optional(v.number()),
+        
         email: v.string(),
         rol: v.string(), // admin, chofer
     }),

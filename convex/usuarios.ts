@@ -14,7 +14,7 @@ export const listar = query({
 export const crear = mutation({
   args: {
     nombre: v.string(),
-    edad: v.number(),
+    
     email: v.string(),
     rol: v.string(),
   },
