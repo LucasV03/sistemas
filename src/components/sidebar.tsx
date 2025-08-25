@@ -16,7 +16,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className=" hidden md:flex md:w-64 md:flex-col  border rounded-xl">
+    <aside className=" hidden md:flex md:w-64 md:flex-col  shadow-xl/100 bg-white rounded-xl">
       {/* Logo / marca */}
       <div className="p-4">
         <div className="flex items-center gap-3 rounded-lg bg-blue-600 text-white p-4">

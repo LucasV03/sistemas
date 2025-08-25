@@ -42,7 +42,7 @@ export default function Home() {
     <main className="p-6 max-w-5xl mx-auto">
       
       {/* Usuarios */}
-      <section className="bg-white rounded-xl p-6 shadow-xl/30">
+      <section className=" bg-white rounded-xl p-6 shadow-xl/30">
   <h2 className="text-3xl font-semibold mb-7 mt-3 pl- ">Usuarios</h2>
 
   {/* Listado con scroll */}
