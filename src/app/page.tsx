@@ -28,10 +28,10 @@ export default function Home() {
       nombre,
       email,
       rol,
-      edad,
+      edad: edad ? parseInt(edad) : 0, 
       
     });
-    // Reset form
+   
     setNombre("");
     setEmail("");
     setRol("chofer");
