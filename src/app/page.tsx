@@ -28,7 +28,8 @@ export default function Home() {
       nombre,
       email,
       rol,
-      edad: edad ? parseInt(edad) : undefined,
+      edad,
+      
     });
     // Reset form
     setNombre("");
@@ -104,6 +105,7 @@ export default function Home() {
           >
             <option value="admin">Admin</option>
             <option value="chofer">Chofer</option>
+            <option value="chofer">Mecanico</option>
           </select>
 
           <input
