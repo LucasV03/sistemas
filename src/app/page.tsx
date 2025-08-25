@@ -106,6 +106,8 @@ export default function Home() {
             <option value="admin">Admin</option>
             <option value="chofer">Chofer</option>
             <option value="chofer">Mecanico</option>
+            <option value="chofer">nacho</option>
+
           </select>
 
           <input
