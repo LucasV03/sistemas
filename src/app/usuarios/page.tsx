@@ -11,7 +11,7 @@ export default function Home() {
   // Estados del formulario
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
-  const [rol, setRol] = useState("chofer");
+  const [rol, setRol] = useState("");
   
 
   if (usuarios === undefined) {
@@ -42,76 +42,86 @@ export default function Home() {
     <main className="p-6 max-w-5xl mx-auto">
       
       {/* Usuarios */}
-      <section className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-semibold m-4">Usuarios</h2>
+      <section className="bg-white rounded-xl p-6 shadow-xl/30">
+  <h2 className="text-3xl font-semibold mb-7 mt-3 pl- ">Usuarios</h2>
 
-        {usuarios.length === 0 ? (
-          <p className="text-red-500">No hay usuarios registrados.</p>
-        ) : (
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-200 text-left">
-                <th className="border px-5 py-2">Nombre</th>
-                <th className="border px-3 py-2">Email</th>
-                <th className="border px-3 py-2">Rol</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-              {usuarios.map((u) => (
-                <tr key={u._id} className="hover:bg-gray-50">
-                  <td className="border px-3 py-2">{u.nombre}</td>
-                  <td className="border px-3 py-2">{u.email}</td>
-                  <td className="border px-3 py-2 capitalize">{u.rol}</td>
-                  
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+  {/* Listado con scroll */}
+{usuarios.length === 0 ? (
+  <p className="text-red-600 pl-7">No hay usuarios registrados.</p>
+) : (
+  <div className="overflow-x-auto">
+    {/* Header fijo */}
+    <table className="min-w-full table-fixed border">
+      <thead className="bg-blue-600 text-white">
+        <tr className="text-left">
+          <th className="w-1/3 px-3 py-2">Nombre</th>
+          <th className="w-1/3 px-3 py-2">Email</th>
+          <th className="w-1/3 px-3 py-2">Rol</th>
+        </tr>
+      </thead>
+    </table>
 
-        {/* Formulario */}
-        <form onSubmit={handleAddUsuario} className="mt-6 space-y-3">
-          <h3 className="text-lg font-medium">Agregar usuario</h3>
+    {/* Body con scroll y altura para 4 filas */}
+    <div className="h-[192px] overflow-y-auto  border-b">
+      <table className="min-w-full table-fixed">
+        <tbody className="bg-white">
+          {usuarios.map((u) => (
+            <tr key={u._id} className="hover:bg-gray-50">
+              <td className="w-1/3 px-3 py-2 h-12 border capitalize">{u.nombre}</td>
+              <td className="w-1/3 px-3 py-2 h-12 border">{u.email}</td>
+              <td className="w-1/3 px-3 py-2 h-12 border capitalize">{u.rol}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
 
-          <input
-            type="text"
-            placeholder="Nombre"
-            className="border rounded px-3 py-2 w-full"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            required
-          />
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="border rounded px-3 py-2 w-full"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+  {/* Formulario abajo en otro bloque */}
+  <div className="mt-12 ml-64 mb-10 w-100  shadow-xl/34   bg-gray-200 rounded-xl p-4  ">
+    <form onSubmit={handleAddUsuario} className="space-y-3">
+      <h3 className="text-lg  font-bold">Agregar usuario</h3>
 
-          <select
-            className="border rounded px-3 py-2 w-full"
-            value={rol}
-            onChange={(e) => setRol(e.target.value)}
-          >
-            <option value="Admin">Admin</option>
-            <option value="Chofer">Chofer</option>
-            <option value="Mecanico">Mecanico</option>
-          </select>
+      <input
+        type="text"
+        placeholder="Nombre"
+        className="border rounded px-3 py-2 w-full "
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+        required
+      />
 
-          
+      <input
+        type="email"
+        placeholder="Email"
+        className="border rounded px-3 py-2 w-full"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
 
-          <button
-            type="submit"
-            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Guardar
-          </button>
-        </form>
-      </section>
+      <select
+        className="border rounded px-3 py-2 w-full"
+        value={rol}
+        onChange={(e) => setRol(e.target.value)}>
+        <option value="Admin">Admin</option>
+        <option value="Chofer">Chofer</option>
+        <option value="Mecanico">Mecanico</option>
+      </select>
+
+      <button
+        type="submit"
+        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Agregar
+      </button>
+    </form>
+  </div>
+</section>
+
+      
     </main>
   );
 }
