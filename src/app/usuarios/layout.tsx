@@ -1,3 +1,3 @@
-export default function VehiculosLayout({ children }: { children: React.ReactNode }) {
+export default function UsuariosLayout({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
 }   

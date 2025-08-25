@@ -16,7 +16,7 @@ export default defineSchema({
     capacidad: v.number(),
     estado: v.string(), // disponible, en viaje, mantenimiento
     km: v.number(),
-    ultimoMantenimientoKm: v.number(),
+    FechaUltimoMantenimiento: v.string(), 
   }),
 
   viajes: defineTable({
@@ -25,6 +25,13 @@ export default defineSchema({
     origen: v.string(),
     destino: v.string(),
     fecha: v.string(), // formato YYYY-MM-DD
+  }),
+
+  respuestos: defineTable({
+    nombreRespuesto: v.string(),
+    codigoRespuesto: v.string(),
+    cantidadRespuesto: v.number(),
+    precioRespuesto: v.number(),
   }),
 
   reportes: defineTable({

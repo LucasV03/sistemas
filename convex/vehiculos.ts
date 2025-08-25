@@ -20,9 +20,9 @@ export const crear = mutation({
   handler: async (ctx, args) => {
     return await ctx.db.insert("vehiculos", {
       ...args,
-      estado: "disponible",
+      estado: "Disponible",
       km: 0,
-      ultimoMantenimientoKm: 0,
+      FechaUltimoMantenimiento: "",
     });
   },
 });
