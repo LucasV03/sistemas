@@ -5,16 +5,18 @@ import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 
 export default function Home() {
-  const usuarios = useQuery(api.usuarios.listar, {});
-  const addUsuario = useMutation(api.usuarios.crear);
+  const empleados = useQuery(api.empleados.listar, {});
+  const addEmpleado = useMutation(api.empleados.crear);
 
   // Estados del formulario
   const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
+  const [dni, setDNI] = useState("");
   const [rol, setRol] = useState("");
   
 
-  if (usuarios === undefined) {
+  if (empleados === undefined) {
     return (
       <main className="p-6 max-w-4xl mx-auto">
         <p className="text-gray-500">Cargando usuarios...</p>
@@ -24,17 +26,21 @@ export default function Home() {
 
   const handleAddUsuario = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addUsuario({
+    await addEmpleado({
       nombre,
+      apellido,
       email,
+      dni,
       rol,
       
       
     });
    
     setNombre("");
+    setApellido("");
     setEmail("");
-    setRol("chofer");
+    setDNI("");
+    setRol("");
     
   };
 
@@ -43,11 +49,11 @@ export default function Home() {
       
       {/* Usuarios */}
       <section className=" bg-white rounded-xl p-6 shadow-xl/30">
-  <h2 className="text-3xl font-semibold mb-7 mt-3 pl- ">Usuarios</h2>
+  <h2 className="text-3xl font-semibold mb-7 mt-3 pl- ">Empleados</h2>
 
   {/* Listado con scroll */}
-{usuarios.length === 0 ? (
-  <p className="text-red-600 pl-7">No hay usuarios registrados.</p>
+{empleados.length === 0 ? (
+  <p className="text-red-600 pl-7">No hay empleados registrados.</p>
 ) : (
   <div className="overflow-x-auto">
     {/* Header fijo */}
@@ -55,6 +61,7 @@ export default function Home() {
       <thead className="bg-blue-600 text-white">
         <tr className="text-left">
           <th className="w-1/3 px-3 py-2">Nombre</th>
+          <th className="w-1/3 px-3 py-2">Apellido</th>
           <th className="w-1/3 px-3 py-2">Email</th>
           <th className="w-1/3 px-3 py-2">Rol</th>
         </tr>
@@ -65,9 +72,10 @@ export default function Home() {
     <div className="h-[192px] overflow-y-auto  border-b">
       <table className="min-w-full table-fixed">
         <tbody className="bg-white">
-          {usuarios.map((u) => (
+          {empleados.map((u) => (
             <tr key={u._id} className="hover:bg-gray-50">
               <td className="w-1/3 px-3 py-2 h-12 border capitalize">{u.nombre}</td>
+              <td className="w-1/3 px-3 py-2 h-12 border capitalize">{u.apellido}</td>
               <td className="w-1/3 px-3 py-2 h-12 border">{u.email}</td>
               <td className="w-1/3 px-3 py-2 h-12 border capitalize">{u.rol}</td>
             </tr>
@@ -82,7 +90,7 @@ export default function Home() {
   {/* Formulario abajo en otro bloque */}
   <div className="mt-12 ml-64 mb-10 w-100  shadow-xl/34   bg-gray-200 rounded-xl p-4  ">
     <form onSubmit={handleAddUsuario} className="space-y-3">
-      <h3 className="text-lg  font-bold">Agregar usuario</h3>
+      <h3 className="text-lg  font-bold">Agregar empleado</h3>
 
       <input
         type="text"
@@ -90,6 +98,24 @@ export default function Home() {
         className="border rounded px-3 py-2 w-full "
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
+        required
+      />
+
+      <input
+        type="text"
+        placeholder="Apellido"
+        className="border rounded px-3 py-2 w-full"
+        value={apellido}
+        onChange={(e) => setApellido(e.target.value)}
+        required
+      />
+
+      <input
+        type="text"
+        placeholder="DNI"
+        className="border rounded px-3 py-2 w-full"
+        value={dni}
+        onChange={(e) => setDNI(e.target.value)}
         required
       />
 
@@ -107,7 +133,7 @@ export default function Home() {
             onChange={(e) => setRol(e.target.value)}
           >
             <option value="Seleccionar">Seleccionar</option>
-            <option value="Admin">Admin</option>
+            <option value="Admin">Jefe</option>
             <option value="Chofer">Chofer</option>
             <option value="Mecanico">Mecanico</option>
           </select>

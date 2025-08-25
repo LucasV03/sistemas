@@ -2,18 +2,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Globe, Home, Car, Route, Users2Icon, UsersIcon, User, PartyPopper, NutOff, Nut, Wrench, Paperclip, UserCheck2 } from 'lucide-react';
+import { Globe, Home, Car, Route, Users2Icon, UsersIcon, User, PartyPopper, NutOff, Nut, Wrench, Paperclip, UserCheck2, User2Icon } from 'lucide-react';
 
 const links = [
   { href: '/',          label: 'Home',      Icon: Home },
   { href: '/usuarios',          label: 'Usuarios',      Icon: User },
+  { href: '/empleados',          label: 'Empleados',      Icon: User2Icon },
   { href: '/vehiculos', label: 'Vehículos', Icon: Car },
   { href: '/viajes',    label: 'Viajes',    Icon: Route },
   { href: '/repuestos', label: 'Repuestos', Icon: Wrench},
   { href: '/reportes',  label: 'Reportes',  Icon: Paperclip },
   { href: '/proveedores',  label: 'Proveedores',  Icon: Users2Icon },
   { href: '/clientes',  label: 'Clientes',  Icon: UserCheck2 },
-  
+
 
   // { href: '/usuarios',  label: 'Usuarios',  Icon: Users },
 ];

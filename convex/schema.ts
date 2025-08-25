@@ -4,10 +4,11 @@ import { v } from "convex/values";
 
 export default defineSchema({
 
-    usuarios: defineTable({
+    empleados: defineTable({
         nombre: v.string(),
-        
+        apellido: v.string(),
         email: v.string(),
+        dni: v.string(),
         rol: v.string(), // admin, chofer
     }),
   vehiculos: defineTable({
