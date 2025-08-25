@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    /* Opciones opcionales */
+    "allowJs": true,
+    "strict": true,
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Opciones requeridas por Convex */
+    "target": "ESNext",
+    "lib": ["ES2021", "dom"],
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "isolatedModules": true,
+    "noEmit": true,
+
+    /* ✅ Agregamos alias */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@convex/*": ["convex/*"]
+    }
+  },
+  "include": ["./**/*"],
+  "exclude": ["./_generated"]
+}
