@@ -18,14 +18,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <div className="flex-2 bg-slate-800 ml-2 rounded-xl">
               <header className="p-2 ">
-                <h1 className="  text-3xl font-bold mb-2 mt-4 pl-150 text-white">🚍 Sistema de Transporte 🚍</h1>  
+                <h1 className="  text-3xl font-bold mb-2 mt-4 pl-150 text-white">🚍 Sistema de Transporte 🚍</h1>
               </header>
 
               <main className="px-6 pb-12">
                 {children}
               </main>
 
-              
+
             </div>
           </div>
         </ConvexClientProvider>
@@ -33,5 +33,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-
-

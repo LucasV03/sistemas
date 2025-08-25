@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 
-export default function UsuariosPage() {
+export default function Home() {
   const usuarios = useQuery(api.usuarios.listar, {});
   const addUsuario = useMutation(api.usuarios.crear);
 
@@ -12,7 +12,6 @@ export default function UsuariosPage() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [rol, setRol] = useState("");
-  
   
 
   if (usuarios === undefined) {
@@ -111,18 +110,6 @@ export default function UsuariosPage() {
         <option value="Chofer">Chofer</option>
         <option value="Mecanico">Mecanico</option>
       </select>
-          <select
-            className="border rounded px-3 py-2 w-full"
-            value={rol}
-            onChange={(e) => setRol(e.target.value)}
-          >
-            <option value="Seleccionar">Seleccionar</option>
-            <option value="Admin">Admin</option>
-            <option value="Chofer">Chofer</option>
-            <option value="Mecanico">Mecanico</option>
-          </select>
-
-          
 
       <button
         type="submit"
