@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Globe, Home, Car, Route } from 'lucide-react';
+import { Globe, Home, Car, Route, Users2Icon } from 'lucide-react';
 
 const links = [
   { href: '/',          label: 'Home',      Icon: Home },
+  { href: '/usuarios',          label: 'Usuarios',      Icon: Users2Icon },
   { href: '/vehiculos', label: 'Vehículos', Icon: Car },
   { href: '/viajes',    label: 'Viajes',    Icon: Route },
   // { href: '/usuarios',  label: 'Usuarios',  Icon: Users },
