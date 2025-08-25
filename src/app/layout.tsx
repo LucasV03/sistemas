@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <div className="flex-2 bg-slate-800 m-1 rounded-xl">
               <header className="p-6">
-                <h1 className="text-3xl font-bold mb-4">🚍 Sistema de Transporte</h1>  
+                <h1 className="text-3xl font-bold mb-4 ">🚍 Sistema de Transporte</h1>  
               </header>
 
               <main className="px-6 pb-12">
