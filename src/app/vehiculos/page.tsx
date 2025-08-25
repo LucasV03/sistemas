@@ -1,7 +1,7 @@
 "use client";
-
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useState } from "react";
 export default function VehiculosPage() {
   const vehiculos = useQuery(api.vehiculos.listar, {});
   const addVehiculo = useMutation(api.vehiculos.crear);
@@ -28,7 +28,7 @@ export default function VehiculosPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Vehículos</h1>
+      <h1 className="text-2xl font-bold mb-4 text-white">Agregar Vehiculo</h1>
 
       {/* FORMULARIO */}
       <form
@@ -46,16 +46,17 @@ export default function VehiculosPage() {
           />
         </div>
 
-        <div className="mb-3">
-          <label className="block mb-1 font-medium">Tipo</label>
-          <input
-            type="text"
+        <select
+            className="border rounded px-3 py-2 w-full"
             value={tipo}
             onChange={(e) => setTipo(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2"
-            placeholder="Camión, Auto, Moto..."
-          />
-        </div>
+          >
+            <option value="Seleccionar">Seleccionar</option>
+            <option value="Colectivo">Colectivo</option>
+            <option value="Camion">Camion</option>
+            <option value="Trafic">Trafic</option>
+          </select>
+        
 
         <div className="mb-3">
           <label className="block mb-1 font-medium">Capacidad</label>
@@ -64,7 +65,7 @@ export default function VehiculosPage() {
             value={capacidad}
             onChange={(e) => setCapacidad(Number(e.target.value))}
             className="w-full border rounded-lg px-3 py-2"
-            placeholder="0"
+            placeholder ="Capacidad"
           />
         </div>
 
@@ -77,19 +78,38 @@ export default function VehiculosPage() {
       </form>
 
       {/* LISTA DE VEHÍCULOS */}
-      <ul className="space-y-2">
-        {vehiculos.map((v) => (
-          <li
-            key={v._id}
-            className="border p-3 rounded-lg flex justify-between items-center"
-          >
-            <span>
-              <strong>{v.patente}</strong> - {v.tipo} ({v.capacidad}) -{" "}
-              <span className="italic">{v.estado}</span>
-            </span>
-          </li>
+<div className="max-w-2xl mx-auto p-6">
+  <h1 className="text-2xl font-bold mb-4 text-white">Vehículos</h1>
+
+  {/* Contenedor con scroll */}
+  <div className="w-full max-h-100 overflow-y-auto border rounded-lg shadow">
+    <table className="w-full border-collapse border border-gray-300">
+      <thead className="bg-gray-200 sticky top-0">
+        <tr>
+          <th className="text-left p-2 border border-gray-300">Patente</th>
+          <th className="text-left p-2 border border-gray-300">Tipo</th>
+          <th className="text-left p-2 border border-gray-300">Capacidad</th>
+          <th className="text-left p-2 border border-gray-300">Estado</th>
+          <th className="text-left p-2 border border-gray-300">Kilometraje</th>
+          <th className="text-left p-2 border border-gray-300">Último mantenimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        {vehiculos.map((vehiculo) => (
+          <tr key={vehiculo._id} className="odd:bg-white even:bg-gray-50">
+            <td className="p-2 border border-gray-300">{vehiculo.patente}</td>
+            <td className="p-2 border border-gray-300">{vehiculo.tipo}</td>
+            <td className="p-2 border border-gray-300">{vehiculo.capacidad}</td>
+            <td className="p-2 border border-gray-300">{vehiculo.estado}</td>
+            <td className="p-2 border border-gray-300">{vehiculo.km}</td>
+            <td className="p-2 border border-gray-300">{vehiculo.FechaUltimoMantenimiento}</td>
+          </tr>
         ))}
-      </ul>
+      </tbody>
+    </table>
+  </div>
+</div>
+
     </div>
   );
 }
