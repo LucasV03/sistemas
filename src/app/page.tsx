@@ -56,7 +56,7 @@ export default function Home() {
 
 
   return (
-    <main className=" space-y-14">
+    <main className=" space-y-9">
       {/* Encabezado */}
       <header className="shadow-xl/10 rounded-xl bg-slate-100 text-center">
         <h1 className="text-3xl font-bold text-slate-900">Panel operativo</h1>
@@ -92,8 +92,8 @@ export default function Home() {
                   <tr>
                     <th className="px-3 py-2 text-left">Unidad</th>
                     <th className="px-3 py-2 text-left">Ruta</th>
-                    <th className="px-3 py-2">Salida</th>
-                    <th className="px-3 py-2">Estado</th>
+                    <th className="px-3 py-2 text-left">Salida</th>
+                    <th className="px-3 py-2 text-left">Estado</th>
                   </tr>
                 </thead>
                 <tbody>
