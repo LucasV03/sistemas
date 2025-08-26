@@ -9,7 +9,7 @@ import Image from "next/image";
 export default function Home() {
   // --- Mock estático (reemplazar luego) ---
   const KPIS = [
-    { label: "Unidades activas", value: "42 / 58" },
+    { label: "Unidades ", value: "42 / 58" },
     { label: "Puntualidad", value: "92%" },
     { label: "Alertas abiertas", value: "3" },    
     { label: "", value: "........." },
