@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ConvexClientProvider from "./providers/convex-provider";
-import Sidebar from "@/components/sidebar";
+import Sidebar from "../components/sidebar"; // Asegurate del casing del archivo
 
 export const metadata: Metadata = {
   title: "Gestión Transporte",
@@ -10,22 +10,24 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" >
-      <body className="text-slate-950">
+    <html lang="es" className="bg-slate-50">
+      <body className="text-slate-950 antialiased">
         <ConvexClientProvider>
-          <div className="min-h-screen p-3 md:flex">
+          {/* Grid responsiva: 1 col en mobile, 16rem + 1fr en md+ */}
+          <div className="min-h-screen grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-3 p-3">
             <Sidebar />
 
-            <div className="flex-2  shadow-xl/300 ml-2 rounded-xl">
-              <header className="p-2 ">
-                <h1 className="  text-3xl font-bold mb-2 mt-4 pl-150 text-white">🚍 Sistema de Transporte 🚍</h1>
+            <div className="rounded-xl bg-blue-200  ring-slate-200 shadow-xl/100">
+              <header className="rounded-t-xl bg-blue-600 px-6 py-4 text-white ">
+                <h1 className="text-2xl md:text-3xl font-bold">
+                  🚍 Sistema de Transporte 🚍
+                </h1>
+          
               </header>
 
-              <main className="px-6 pb-12">
+              <main className="p-4 md:p-6">
                 {children}
               </main>
-
-
             </div>
           </div>
         </ConvexClientProvider>
