@@ -133,7 +133,7 @@ export default function Home() {
             onChange={(e) => setRol(e.target.value)}
           >
             <option value="Seleccionar">Seleccionar</option>
-            <option value="Admin">Jefe</option>
+            <option value="Jefe">Jefe</option>
             <option value="Chofer">Chofer</option>
             <option value="Mecanico">Mecanico</option>
           </select>
