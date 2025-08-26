@@ -4,7 +4,7 @@ import ConvexClientProvider from "./providers/convex-provider";
 import Sidebar from "../components/sidebar"; // Asegurate del casing del archivo
 
 export const metadata: Metadata = {
-  title: "Gestión Transporte",
+  title: "Gestión de Transportes",
   description: "Sistema de transporte con Next.js + Convex",
 };
 
