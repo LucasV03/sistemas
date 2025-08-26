@@ -17,8 +17,12 @@ export const crear = mutation({
     apellido: v.string(),
     email: v.string(),
     password: v.string(),
+    rol: v.optional(v.string()), // <- opcional también acá
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("usuarios", args);
+    return await ctx.db.insert("usuarios", {
+      ...args,
+      rol: args.rol ?? "Chofer", // <- default si no lo mandás
+    });
   },
 });
