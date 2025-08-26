@@ -3,7 +3,7 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
-
+import BusMap, { type Bus } from "../components/BusMap";
 import Image from "next/image";
 
 export default function Home() {
@@ -47,6 +47,12 @@ export default function Home() {
     "Ausencia reportada: J. Pérez (turno tarde)",
     "Vencimiento licencia: M. Gómez (30 días)",
   ];
+  const BUSES: Bus[] = [
+  { id: "BUS-102", lat: -24.787, lng: -65.41, route: "A → B", speedKmH: 38, heading: 45, updatedAt: new Date().toISOString() },
+  { id: "BUS-088", lat: -24.80,  lng: -65.44, route: "C → D", speedKmH: 22, heading: 320, updatedAt: new Date().toISOString() },
+  { id: "BUS-031", lat: -24.775, lng: -65.43, route: "E → A", speedKmH: 41, heading: 190, updatedAt: new Date().toISOString() },
+];
+
 
 
   return (
@@ -155,7 +161,11 @@ export default function Home() {
         </div>
 
         {/* Columna lateral */}
+        
         <div className="space-y-12  w-130 ">
+          <Card title="Mapa — flota en vivo">
+          <BusMap buses={BUSES} />
+          </Card>
           <Card title="Flota — fuera de servicio">
             <ul className="space-y-2 text-sm">
               {FUERA_SERVICIO.map((u) => (
