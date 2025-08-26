@@ -45,10 +45,10 @@ export default function Home() {
   };
 
   return (
-    <main className="p-6 max-w-5xl mx-auto">
+    <main className="p-6 max-w-5xl h-2 mx-auto">
       
       {/* Usuarios */}
-      <section className=" bg-white rounded-xl p-6 shadow-xl/30">
+      <section className=" bg-white rounded-xl p-3 shadow-xl/30">
   <h2 className="text-3xl font-semibold mb-7 mt-3 pl- ">Empleados</h2>
 
   {/* Listado con scroll */}
