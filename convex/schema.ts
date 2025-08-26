@@ -4,12 +4,14 @@ import { v } from "convex/values";
 
 export default defineSchema({
 
-  usuarios: defineTable({
-    nombre: v.string(),
-    apellido: v.string(),
-    email: v.string(),
-    password: v.string(),
-  }),
+    usuarios: defineTable({
+      nombre: v.string(),
+      apellido: v.optional(v.string()),
+      email: v.string(),
+      password: v.optional(v.string()),
+      rol: v.string()
+    }),
+
 
     empleados: defineTable({
         nombre: v.string(),
@@ -104,5 +106,13 @@ export default defineSchema({
     estado: v.string(), // completado, pendiente, cancelado
     creadoEn: v.string(), // fecha/hora ISO
   }),
-
+   pos_ultimas: defineTable({
+    unidadId: v.string(),     // ej: "BUS-101"
+    lat: v.number(),
+    lng: v.number(),
+    estado: v.optional(v.string()),  // "A tiempo" | "Demora" | ...
+    ts: v.number(),                  // Date.now()
+  })
+  .index("byUnidadId", ["unidadId"]),
 });
+
