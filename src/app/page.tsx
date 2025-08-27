@@ -16,7 +16,7 @@ const BusMap = dynamic(() => import("../components/BusMap"), {
 export default function Home() {
   // --- Mock estático (reemplazar luego) ---
   const KPIS = [
-    { label: "Unidades ", value: "42 / 58" },
+    { label: "Unidades activas", value: "42 / 58" },
     { label: "Puntualidad", value: "92%" },
     { label: "Alertas abiertas", value: "3" },
     { label: "", value: "........." },
