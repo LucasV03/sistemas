@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "cloudinary": "^2.7.0",
     "convex": "^1.26.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.541.0",
