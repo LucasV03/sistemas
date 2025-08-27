@@ -3,13 +3,15 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useMemo, useState } from "react";
+import RepuestoCard from "../../components/RepuestoCard";
+import { useRouter } from "next/navigation";
 
 export default function RepuestosPage() {
   // DATA
   const repuestos = useQuery(api.repuestos.listar);
   const addRepuesto = useMutation(api.repuestos.crear);
   const eliminarRepuesto = useMutation(api.repuestos.eliminar);
-
+const router = useRouter();
   const loading = repuestos === undefined;
   const data = repuestos ?? [];
 
@@ -24,7 +26,7 @@ export default function RepuestosPage() {
   const [stock, setStock] = useState<number>(0);
   const [precioUnitario, setPrecioUnitario] = useState<number>(0);
   const [ubicacion, setUbicacion] = useState("");
-  const [imagenUrl, setImagenUrl] = useState("");
+
   const [fechaIngreso, setFechaIngreso] = useState("");
 
   // SORT
@@ -66,7 +68,7 @@ export default function RepuestosPage() {
       stock,
       precioUnitario,
       ubicacion,
-      imagenUrl,
+      
       fechaIngreso: fechaIngreso || new Date().toISOString(),
     });
     setCodigo("");
@@ -79,7 +81,7 @@ export default function RepuestosPage() {
     setStock(0);
     setPrecioUnitario(0);
     setUbicacion("");
-    setImagenUrl("");
+    
     setFechaIngreso("");
   };
 
@@ -131,6 +133,17 @@ export default function RepuestosPage() {
             ))}
           </div>
         )}
+       <div className="grid grid-cols-3 gap-4">
+      {repuestosOrdenados.map((r: any) => (
+        <RepuestoCard
+          key={r._id}
+          repuesto={r}
+          onUpdate={() => router.push(`/repuestos/${r.codigo}/editar`)}
+
+          onDelete={() => eliminarRepuesto({ id: r._id })}
+        />
+      ))}
+    </div>
 
         {/* FORM */}
         <div className="mt-8 rounded-xl bg-white p-4 ring-1 ring-slate-200">
@@ -224,14 +237,7 @@ export default function RepuestosPage() {
                 className="border rounded px-3 py-2 w-full"
               />
             </Field>
-            <Field label="URL de imagen">
-              <input
-                type="text"
-                value={imagenUrl}
-                onChange={(e) => setImagenUrl(e.target.value)}
-                className="border rounded px-3 py-2 w-full"
-              />
-            </Field>
+            
             <Field label="Fecha Ingreso">
               <input
                 type="date"
@@ -240,6 +246,28 @@ export default function RepuestosPage() {
                 className="border rounded px-3 py-2 w-full"
               />
             </Field>
+            
+  <input
+    type="file"
+    accept="image/*"
+    onChange={async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      
+    }}
+    className="border rounded px-3 py-2 w-full"
+  />
+
             <div className="md:col-span-2">
               <button
                 type="submit"

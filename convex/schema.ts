@@ -49,7 +49,7 @@ export default defineSchema({
     stock: v.number(),               // Cantidad disponible
     precioUnitario: v.number(),      // Precio estimado
     ubicacion: v.optional(v.string()), // Estante, depósito, taller
-    imagenUrl: v.optional(v.string()), // URL de la imagen
+    imagenUrl: v.optional(v.string()),
     fechaIngreso: v.string(),        // Formato YYYY-MM-DD
   })
   .index("byCodigo", ["codigo"])
