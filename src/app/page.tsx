@@ -1,19 +1,25 @@
+// src/app/page.tsx
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { useState } from "react";
-import BusMap, { type Bus } from "../components/BusMap";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import type { Bus } from "../components/BusMap";
+
+// ⬇️ Import dinámico SIN SSR (clave para Leaflet/react-leaflet)
+const BusMap = dynamic(() => import("../components/BusMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[420px] w-full rounded-lg bg-slate-100 animate-pulse" />
+  ),
+});
 
 export default function Home() {
   // --- Mock estático (reemplazar luego) ---
   const KPIS = [
     { label: "Unidades ", value: "42 / 58" },
     { label: "Puntualidad", value: "92%" },
-    { label: "Alertas abiertas", value: "3" },    
+    { label: "Alertas abiertas", value: "3" },
     { label: "", value: "........." },
-
   ];
 
   const PRIORIDADES = [
@@ -47,16 +53,15 @@ export default function Home() {
     "Ausencia reportada: J. Pérez (turno tarde)",
     "Vencimiento licencia: M. Gómez (30 días)",
   ];
+
   const BUSES: Bus[] = [
-  { id: "BUS-102", lat: -24.787, lng: -65.41, route: "A → B", speedKmH: 38, heading: 45, updatedAt: new Date().toISOString() },
-  { id: "BUS-088", lat: -24.80,  lng: -65.44, route: "C → D", speedKmH: 22, heading: 320, updatedAt: new Date().toISOString() },
-  { id: "BUS-031", lat: -24.775, lng: -65.43, route: "E → A", speedKmH: 41, heading: 190, updatedAt: new Date().toISOString() },
-];
-
-
+    { id: "BUS-102", lat: -24.787, lng: -65.41, route: "A → B", speedKmH: 38, heading: 45, updatedAt: new Date().toISOString() },
+    { id: "BUS-088", lat: -24.80,  lng: -65.44, route: "C → D", speedKmH: 22, heading: 320, updatedAt: new Date().toISOString() },
+    { id: "BUS-031", lat: -24.775, lng: -65.43, route: "E → A", speedKmH: 41, heading: 190, updatedAt: new Date().toISOString() },
+  ];
 
   return (
-    <main className=" space-y-9">
+    <main className="space-y-9">
       {/* Encabezado */}
       <header className="shadow-xl/10 rounded-xl bg-slate-100 text-center">
         <h1 className="text-3xl font-bold text-slate-900">Panel operativo</h1>
@@ -117,54 +122,47 @@ export default function Home() {
             </div>
           </Card>
 
+          {/* Incidencias y Personal */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Card title="Incidencias" className="h-full">
+              <ul className="space-y-1 text-sm">
+                {INCIDENCIAS.map((i, idx) => (
+                  <li key={idx} className="rounded-lg border p-2">
+                    <span
+                      className={[
+                        "mr-2 rounded px-2 py-0.5 text-xs",
+                        i.sev === "Alta"
+                          ? "bg-rose-100 text-rose-700 ring-1 ring-rose-200"
+                          : i.sev === "Media"
+                          ? "bg-amber-100 text-amber-700 ring-1 ring-amber-200"
+                          : "bg-slate-100 text-slate-700 ring-1 ring-slate-200",
+                      ].join(" ")}
+                    >
+                      {i.sev}
+                    </span>
+                    {i.texto}
+                  </li>
+                ))}
+                {INCIDENCIAS.length === 0 && (
+                  <li className="text-slate-500">Sin incidencias.</li>
+                )}
+              </ul>
+            </Card>
 
-            
-            {/* Incidencias y Personal lado a lado, debajo de Salidas próximas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Card title="Incidencias" className="h-full">
-                <ul className="space-y-1 text-sm">
-                  {INCIDENCIAS.map((i, idx) => (
-                    <li key={idx} className="rounded-lg border p-2">
-                      <span
-                        className={[
-                          "mr-2 rounded px-2 py-0.5 text-xs",
-                          i.sev === "Alta"
-                            ? "bg-rose-100 text-rose-700 ring-1 ring-rose-200"
-                            : i.sev === "Media"
-                            ? "bg-amber-100 text-amber-700 ring-1 ring-amber-200"
-                            : "bg-slate-100 text-slate-700 ring-1 ring-slate-200",
-                        ].join(" ")}
-                      >
-                        {i.sev}
-                      </span>
-                      {i.texto}
-                    </li>
-                  ))}
-                  {INCIDENCIAS.length === 0 && (
-                    <li className="text-slate-500">Sin incidencias.</li>
-                  )}
-                </ul>
-              </Card>
-
-              <Card title="Personal" className="h-full">
-                <ul className="list-disc pl-4 space-y-2 text-sm text-slate-700">
-                  {PERSONAL.map((t, i) => (
-                    <li key={i}>{t}</li>
-                  ))}
-                </ul>
-              </Card>
-            </div>
-
-
-
-
+            <Card title="Personal" className="h-full">
+              <ul className="list-disc pl-4 space-y-2 text-sm text-slate-700">
+                {PERSONAL.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ul>
+            </Card>
+          </div>
         </div>
 
         {/* Columna lateral */}
-        
-        <div className="space-y-12  w-130 ">
+        <div className="space-y-12 w-130">
           <Card title="Mapa — flota en vivo">
-          <BusMap buses={BUSES} />
+            <BusMap buses={BUSES} />
           </Card>
           <Card title="Flota — fuera de servicio">
             <ul className="space-y-2 text-sm">
@@ -177,18 +175,20 @@ export default function Home() {
               {FUERA_SERVICIO.length === 0 && <li className="text-slate-500">Sin novedades.</li>}
             </ul>
           </Card>
-                  
-
         </div>
-          
-        
       </section>
     </main>
   );
 }
 
-function Card({ title, children, className = "" }:{
-  title: string; children: React.ReactNode; className?: string
+function Card({
+  title,
+  children,
+  className = "",
+}: {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
 }) {
   return (
     <section className={`rounded-xl bg-white p-4 ring-1 ring-slate-200 shadow ${className}`}>
@@ -199,4 +199,3 @@ function Card({ title, children, className = "" }:{
     </section>
   );
 }
-
