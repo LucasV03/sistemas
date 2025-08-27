@@ -38,12 +38,24 @@ export default defineSchema({
     fecha: v.string(), // formato YYYY-MM-DD
   }),
 
-  respuestos: defineTable({
-    nombreRespuesto: v.string(),
-    codigoRespuesto: v.string(),
-    cantidadRespuesto: v.number(),
-    precioRespuesto: v.number(),
-  }),
+  repuestos: defineTable({
+    codigo: v.string(),              // Código interno o SKU
+    nombre: v.string(),              // Nombre del repuesto (ej: Filtro de aceite)
+    descripcion: v.optional(v.string()), // Detalle técnico
+    categoria: v.string(),           // Motor, frenos, suspensión, eléctrico, carrocería, etc.
+    vehiculo: v.string(),            // "trafic" | "colectivo" | "ambos"
+    marca: v.optional(v.string()),   // Marca del repuesto
+    modeloCompatible: v.optional(v.string()), // Modelos compatibles
+    stock: v.number(),               // Cantidad disponible
+    precioUnitario: v.number(),      // Precio estimado
+    ubicacion: v.optional(v.string()), // Estante, depósito, taller
+    imagenUrl: v.optional(v.string()), // URL de la imagen
+    fechaIngreso: v.string(),        // Formato YYYY-MM-DD
+  })
+  .index("byCodigo", ["codigo"])
+  .index("byCategoria", ["categoria"])
+  .index("byVehiculo", ["vehiculo"]),
+
 
   reportes: defineTable({
     viajeId: v.id("viajes"),
