@@ -20,11 +20,11 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex md:w-64 md:flex-col bg-[#1a1a1a] text-gray-300">
+    <aside className="hidden md:flex md:w-64 md:flex-col bg-[#1a1a1a]">
       {/* Logo */}
-      <div className="flex items-center justify-center p-6 border-b border-gray-700">
+      <div className="flex items-center gap-3 text-white text-xl font-bold tracking-wide border-b border-gray-800 px-6 py-5.5">
         <Globe className="h-6 w-6 text-violet-500" />
-        <span className="ml-2 text-lg font-bold text-white">Panel</span>
+        Panel
       </div>
 
       {/* Navegación */}
@@ -33,18 +33,25 @@ export default function Sidebar() {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
           return (
             <Link
-  key={href}
-  href={href}
-  className={`flex flex-col items-center justify-center relative transition-colors 
-    ${active ? 'text-white' : 'text-gray-400 hover:text-white'}`}
->
-  {/* Icono más grande */}
-  <Icon className="h-10 w-10" />  
+              key={href}
+              href={href}
+              className={[
+                "flex flex-col items-center justify-center rounded-md py-4 text-sm transition-colors relative",
+                active
+                  ? "bg-[#111111] text-white"
+                  : "text-gray-400 hover:text-white hover:bg-[#2a2a2a]"
+              ].join(" ")}
+            >
+              {/* Icono más grande */}
+              <Icon className="h-8 w-8 mb-1" />  
+              {/* Texto debajo */}
+              <span className="text-xs">{label}</span>  
 
-  {/* Texto más grande */}
-  <span className="text-base mt-2">{label}</span>  
-</Link>
-
+              {/* Banda lateral violeta que se extiende a la derecha */}
+              {active && (
+                <span className="absolute inset-y-0 right-0 w-screen bg-[#111111] -z-10"></span>
+              )}
+            </Link>
           );
         })}
       </nav>
