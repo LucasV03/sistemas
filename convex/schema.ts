@@ -1,130 +1,128 @@
-// convex/schema.ts
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  usuarios: defineTable({
+    nombre: v.string(),
+    apellido: v.optional(v.string()),
+    email: v.string(),
+    password: v.optional(v.string()),
+    rol: v.string()
+  }),
 
-    usuarios: defineTable({
-      nombre: v.string(),
-      apellido: v.optional(v.string()),
-      email: v.string(),
-      password: v.optional(v.string()),
-      rol: v.string()
-    }),
-
-
-    empleados: defineTable({
-        nombre: v.string(),
-        apellido: v.string(),
-        email: v.string(),
-        dni: v.string(),
-        rol: v.string(), 
-    }),
+  empleados: defineTable({
+    nombre: v.string(),
+    apellido: v.string(),
+    email: v.string(),
+    dni: v.string(),
+    rol: v.string(),
+  }),
 
   vehiculos: defineTable({
     patente: v.string(),
-    tipo: v.string(), // camión, bus, camioneta
+    tipo: v.string(),
     capacidad: v.number(),
-    estado: v.string(), // disponible, en viaje, mantenimiento
     km: v.number(),
-    FechaUltimoMantenimiento: v.string(), 
-  }),
+    estado: v.string(),
+    FechaUltimoMantenimiento: v.string(),
+    ProximoMantenimiento: v.optional(v.string()),
+    ultimoServiceKm: v.number(),
+    serviceIntervalKm: v.number(),
+  }).index("by_patente", ["patente"]),
+
+  mantenimientos: defineTable({
+    vehiculoId: v.id("vehiculos"),
+    km: v.number(),
+    fecha: v.string(), // YYYY-MM-DD
+  }).index("byVehiculoFecha", ["vehiculoId", "fecha"]),
 
   viajes: defineTable({
     vehiculoId: v.id("vehiculos"),
     choferId: v.id("usuarios"),
     origen: v.string(),
     destino: v.string(),
-    fecha: v.string(), // formato YYYY-MM-DD
+    fecha: v.string(),
   }),
 
   repuestos: defineTable({
-    codigo: v.string(),              // Código interno o SKU
-    nombre: v.string(),              // Nombre del repuesto (ej: Filtro de aceite)
-    descripcion: v.optional(v.string()), // Detalle técnico
-    categoria: v.string(),           // Motor, frenos, suspensión, eléctrico, carrocería, etc.
-    vehiculo: v.string(),            // "trafic" | "colectivo" | "ambos"
-    marca: v.optional(v.string()),   // Marca del repuesto
-    modeloCompatible: v.optional(v.string()), // Modelos compatibles
-    stock: v.number(),               // Cantidad disponible
-    precioUnitario: v.number(),      // Precio estimado
-    ubicacion: v.optional(v.string()), // Estante, depósito, taller
+    codigo: v.string(),
+    nombre: v.string(),
+    descripcion: v.optional(v.string()),
+    categoria: v.string(),
+    vehiculo: v.string(),
+    marca: v.optional(v.string()),
+    modeloCompatible: v.optional(v.string()),
+    stock: v.number(),
+    precioUnitario: v.number(),
+    ubicacion: v.optional(v.string()),
     imagenUrl: v.optional(v.string()),
-    fechaIngreso: v.string(),        // Formato YYYY-MM-DD
+    fechaIngreso: v.string(),
   })
-  .index("byCodigo", ["codigo"])
-  .index("byCategoria", ["categoria"])
-  .index("byVehiculo", ["vehiculo"]),
-
+    .index("byCodigo", ["codigo"])
+    .index("byCategoria", ["categoria"])
+    .index("byVehiculo", ["vehiculo"]),
 
   reportes: defineTable({
     viajeId: v.id("viajes"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
-  }),
-
-  mantenimientos: defineTable({
-    vehiculoId: v.id("vehiculos"),
-    km: v.number(),
-    fecha: v.string(), // formato YYYY-MM-DD
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
 
   reportesMantenimientos: defineTable({
     mantenimientoId: v.id("mantenimientos"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
 
   reportesViajes: defineTable({
     viajeId: v.id("viajes"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
 
   reportesVehiculos: defineTable({
     vehiculoId: v.id("vehiculos"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
 
   reportesUsuarios: defineTable({
     usuarioId: v.id("usuarios"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
 
   reportesChoferes: defineTable({
     choferId: v.id("usuarios"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
 
   reportesSupervisores: defineTable({
     supervisorId: v.id("usuarios"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
 
   reportesAdmins: defineTable({
     adminId: v.id("usuarios"),
     descripcion: v.string(),
-    estado: v.string(), // completado, pendiente, cancelado
-    creadoEn: v.string(), // fecha/hora ISO
+    estado: v.string(),
+    creadoEn: v.string(),
   }),
-   pos_ultimas: defineTable({
-    unidadId: v.string(),     // ej: "BUS-101"
+
+  pos_ultimas: defineTable({
+    unidadId: v.string(),
     lat: v.number(),
     lng: v.number(),
-    estado: v.optional(v.string()),  // "A tiempo" | "Demora" | ...
-    ts: v.number(),                  // Date.now()
-  })
-  .index("byUnidadId", ["unidadId"]),
+    estado: v.optional(v.string()),
+    ts: v.number(),
+  }).index("byUnidadId", ["unidadId"]),
 });
-
