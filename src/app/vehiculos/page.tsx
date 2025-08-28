@@ -10,69 +10,78 @@ type SortOrder = 'asc' | 'desc';
 export default function VehiculosPage() {
   const vehiculos = useQuery(api.vehiculos.listar);
   const addVehiculo = useMutation(api.vehiculos.crear);
+  const registrarMantenimiento = useMutation(api.vehiculos.registrarMantenimiento);
 
   const [patente, setPatente] = useState('');
   const [tipo, setTipo] = useState('');
   const [capacidad, setCapacidad] = useState<string>('');
+  const [busyId, setBusyId] = useState<string | null>(null); // para desactivar botón mientras se registra
 
-  // ➜ Estado de orden
+  // Orden
   const [sortKey, setSortKey] = useState<SortKey>('patente');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
   const loading = vehiculos === undefined;
   const data = vehiculos ?? [];
 
+  // Defaults por tipo
   const DEFAULTS: Record<string, number> = { Colectivo: 10000, Camion: 15000, Trafic: 8000 };
 
   const formatKm = (n: number) =>
     new Intl.NumberFormat('es-AR').format(Math.max(0, Math.round(n)));
 
-  function calcNextService(v: any) {
-    const currentKm = Number.isFinite(v?.km) ? Number(v.km) : 0;
-    const lastKm = Number.isFinite(v?.ultimoServiceKm) ? Number(v.ultimoServiceKm) : currentKm;
-    const interval = Number.isFinite(v?.serviceIntervalKm)
-      ? Number(v.serviceIntervalKm)
-      : (DEFAULTS[v?.tipo] ?? 10000);
-    const nextAtKm = lastKm + interval;
-    const remaining = nextAtKm - currentKm;
-    let tone: 'ok' | 'warn' | 'due' = 'ok';
-    if (remaining <= 0) tone = 'due';
-    else if (remaining <= interval * 0.1) tone = 'warn';
-    return { nextAtKm, remaining, tone };
+  // Fecha local YYYY-MM-DD (America/Argentina/Salta)
+  function todayLocalISO(): string {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
-  // ➜ Ordenamiento en memoria
+function calcNextService(v: any) {
+  const DEFAULTS: Record<string, number> = { Colectivo: 10000, Camion: 15000, Trafic: 8000 };
+
+  const currentKm = Number.isFinite(v?.km) ? Number(v.km) : 0;
+  const interval = Number.isFinite(v?.serviceIntervalKm)
+    ? Number(v.serviceIntervalKm)
+    : (DEFAULTS[v?.tipo] ?? 10000);
+
+  // 👇 clave: si nunca registraste mantenimiento, la base es 0 (no el km actual)
+  const lastKm = Number.isFinite(v?.ultimoServiceKm) ? Number(v.ultimoServiceKm) : 0;
+
+  const nextAtKm = lastKm + interval;
+  const remaining = nextAtKm - currentKm;
+
+  let tone: 'ok' | 'warn' | 'due' = 'ok';
+  if (remaining <= 0) tone = 'due';
+  else if (remaining <= interval * 0.1) tone = 'warn';
+
+  return { nextAtKm, remaining, tone };
+}
+
+
+  // Ordenamiento en memoria
   const sortedData = useMemo(() => {
     const toStr = (v: any) => String(v ?? '').toUpperCase();
     const toNum = (v: any) => (Number.isFinite(Number(v)) ? Number(v) : 0);
-
     return [...data].sort((a: any, b: any) => {
-      let A: any;
-      let B: any;
-
+      let A: any, B: any;
       if (sortKey === 'km' || sortKey === 'capacidad') {
-        A = toNum(a[sortKey]);
-        B = toNum(b[sortKey]);
+        A = toNum(a[sortKey]); B = toNum(b[sortKey]);
       } else if (sortKey === 'estado') {
-        // estado puede venir null/undefined → tratamos como cadena
-        A = toStr(a.estado ?? '-');
-        B = toStr(b.estado ?? '-');
+        A = toStr(a.estado ?? '-'); B = toStr(b.estado ?? '-');
       } else {
-        A = toStr(a[sortKey]);
-        B = toStr(b[sortKey]);
+        A = toStr(a[sortKey]); B = toStr(b[sortKey]);
       }
-
       const cmp = A < B ? -1 : A > B ? 1 : 0;
       return sortOrder === 'asc' ? cmp : -cmp;
     });
   }, [data, sortKey, sortOrder]);
 
   function handleSort(key: SortKey) {
-    if (sortKey === key) setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'));
-    else {
-      setSortKey(key);
-      setSortOrder('asc');
-    }
+    if (sortKey === key) setSortOrder(o => (o === 'asc' ? 'desc' : 'asc'));
+    else { setSortKey(key); setSortOrder('asc'); }
   }
 
   async function handleAddVehiculo(e: React.FormEvent) {
@@ -92,6 +101,22 @@ export default function VehiculosPage() {
     } catch (err: any) {
       console.error(err);
       alert(`Error al crear vehículo: ${err?.message ?? 'Ver consola de Convex'}`);
+    }
+  }
+
+  // Registrar mantenimiento: fecha hoy + km actual
+  async function handleRegistrarMantenimiento(v: any) {
+    try {
+      setBusyId(v._id);
+      const fecha = todayLocalISO();
+      const kmActual = Number.isFinite(v?.km) ? Math.floor(v.km) : 0;
+      await registrarMantenimiento({ vehiculoId: v._id, fecha, km: kmActual });
+      // Convex revalidará la query y verás la fila actualizada
+    } catch (err: any) {
+      console.error(err);
+      alert(`No se pudo registrar mantenimiento: ${err?.message ?? 'ver consola'}`);
+    } finally {
+      setBusyId(null);
     }
   }
 
@@ -129,6 +154,7 @@ export default function VehiculosPage() {
                   </th>
                   <th className="px-4 py-2 text-left">Último mantenimiento</th>
                   <th className="px-4 py-2 text-left">Próximo service</th>
+                  <th className="px-4 py-2 text-left">Acciones</th>
                 </tr>
               </thead>
               <tbody className="text-sm text-neutral-200">
@@ -140,6 +166,7 @@ export default function VehiculosPage() {
                       : info.tone === 'warn'
                       ? 'bg-amber-100 text-amber-700 ring-amber-200'
                       : 'bg-rose-100 text-rose-700 ring-rose-200';
+
                   return (
                     <tr key={v._id} className="odd:bg-neutral-900 even:bg-neutral-800 hover:bg-neutral-700">
                       <td className="px-4 py-2 border-t">{v.patente}</td>
@@ -147,7 +174,9 @@ export default function VehiculosPage() {
                       <td className="px-4 py-2 border-t">{v.capacidad}</td>
                       <td className="px-4 py-2 border-t capitalize">{v.estado ?? '-'}</td>
                       <td className="px-4 py-2 border-t">{formatKm(v.km ?? 0)}</td>
-                      <td className="px-4 py-2 border-t">{v.FechaUltimoMantenimiento || '-'}</td>
+                      <td className="px-4 py-2 border-t">
+                        {v.FechaUltimoMantenimiento || '-'}
+                      </td>
                       <td className="px-4 py-2 border-t">
                         <div className="flex flex-col">
                           <span className={`w-fit rounded-full px-2 py-0.5 text-xs ring-1 ${badge}`}>
@@ -159,6 +188,16 @@ export default function VehiculosPage() {
                               : `vencido por ${formatKm(Math.abs(info.remaining))} km`}
                           </span>
                         </div>
+                      </td>
+                      <td className="px-4 py-2 border-t">
+                        <button
+                          onClick={() => handleRegistrarMantenimiento(v)}
+                          disabled={busyId === v._id}
+                          className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60"
+                          title="Registrar mantenimiento (fecha: hoy; km: actual)"
+                        >
+                          {busyId === v._id ? 'Guardando...' : 'Registrar mantenimiento'}
+                        </button>
                       </td>
                     </tr>
                   );
