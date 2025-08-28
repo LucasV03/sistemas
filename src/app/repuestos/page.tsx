@@ -117,87 +117,104 @@ export default function RepuestosPage() {
           </div>
         )}
 
+      
         {/* FORM */}
-        <div className="mt-12 rounded-2xl bg-slate-50 p-6 ring-1 ring-slate-200 shadow-inner">
-          <h3 className="text-xl font-semibold mb-4 text-slate-800">
-            ➕ Agregar repuesto
-          </h3>
-          <form
-            onSubmit={handleAddRepuesto}
-            className="grid grid-cols-1 md:grid-cols-2 gap-5"
-          >
-            <Field label="Código">
-              <Input value={codigo} onChange={setCodigo} required />
-            </Field>
-            <Field label="Nombre">
-              <Input value={nombre} onChange={setNombre} required />
-            </Field>
-            <Field label="Descripción">
-              <Textarea value={descripcion} onChange={setDescripcion} />
-            </Field>
-            <Field label="Categoría">
-              <Input value={categoria} onChange={setCategoria} required />
-            </Field>
-            <Field label="Vehículo">
-              <Input value={vehiculo} onChange={setVehiculo} required />
-            </Field>
-            <Field label="Marca">
-              <Input value={marca} onChange={setMarca} />
-            </Field>
-            <Field label="Modelo Compatible">
-              <Input value={modeloCompatible} onChange={setModeloCompatible} />
-            </Field>
-            <Field label="Stock">
-              <Input
-                type="number"
-                value={stock}
-                onChange={setStock}
-                required
-              />
-            </Field>
-            <Field label="Precio Unitario">
-              <Input
-                type="number"
-                value={precioUnitario}
-                onChange={setPrecioUnitario}
-                required
-              />
-            </Field>
-            <Field label="Ubicación">
-              <Input value={ubicacion} onChange={setUbicacion} />
-            </Field>
-            <Field label="Fecha Ingreso">
-              <Input
-                type="date"
-                value={fechaIngreso}
-                onChange={setFechaIngreso}
-              />
-            </Field>
+<div className="mt-12">
+  <article className="border rounded-xl p-6 shadow-sm bg-white hover:shadow-md transition">
+    <h3 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
+      ➕ Agregar repuesto
+    </h3>
 
-            <div className="md:col-span-2">
-              <button
-                type="submit"
-                className="w-full md:w-auto px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
-              >
-                Guardar Repuesto
-              </button>
-            </div>
-          </form>
-        </div>
+    <form
+      onSubmit={handleAddRepuesto}
+      className="flex flex-col gap-5"
+    >
+      <div className="flex flex-wrap gap-5">
+        <Field label="Código">
+          <Input value={codigo} onChange={setCodigo} required />
+        </Field>
+        <Field label="Nombre">
+          <Input value={nombre} onChange={setNombre} required />
+        </Field>
+        <Field label="Descripción" className="flex-1 min-w-[250px]">
+          <Textarea value={descripcion} onChange={setDescripcion} />
+        </Field>
+        <Field label="Categoría">
+          <Input value={categoria} onChange={setCategoria} required />
+        </Field>
+        <Field label="Vehículo">
+          <Input value={vehiculo} onChange={setVehiculo} required />
+        </Field>
+        <Field label="Marca">
+          <Input value={marca} onChange={setMarca} />
+        </Field>
+        <Field label="Modelo Compatible">
+          <Input value={modeloCompatible} onChange={setModeloCompatible} />
+        </Field>
+        <Field label="Stock">
+          <Input
+            type="number"
+            value={stock}
+            onChange={setStock}
+            required
+          />
+        </Field>
+        <Field label="Precio Unitario">
+          <Input
+            type="number"
+            value={precioUnitario}
+            onChange={setPrecioUnitario}
+            required
+          />
+        </Field>
+        <Field label="Ubicación">
+          <Input value={ubicacion} onChange={setUbicacion} />
+        </Field>
+        <Field label="Fecha Ingreso">
+          <Input
+            type="date"
+            value={fechaIngreso}
+            onChange={setFechaIngreso}
+          />
+        </Field>
+      </div>
+
+      {/* Botón */}
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
+        >
+          Guardar Repuesto
+        </button>
+      </div>
+    </form>
+  </article>
+</div>
+
       </section>
     </main>
   );
 }
 
 /* Helpers */
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col flex-1 min-w-[220px] ${className}`}>
       <label className="text-sm font-medium text-slate-700 mb-1">{label}</label>
       {children}
     </div>
   );
 }
+
 
 function Input({
   type = "text",

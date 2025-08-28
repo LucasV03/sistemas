@@ -47,6 +47,9 @@ export default function RepuestoCard({
         {showMore && (
           <div className="mt-2 text-xs text-slate-700 space-y-1">
             <p>
+              <b>Descripción:</b> {repuesto.descripcion}
+            </p>
+            <p>
               <b>Categoría:</b> {repuesto.categoria}
             </p>
             <p>

@@ -6,11 +6,14 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { use } from "react";
 
-export default function EditarRepuestoPage({ params }: { params: Promise<{ codigo: string }> }) {
-
+export default function EditarRepuestoPage({
+  params,
+}: {
+  params: Promise<{ codigo: string }>;
+}) {
   const router = useRouter();
- const { codigo } = use(params); // ✅ Se hace unwrap del Promise
-    const repuesto = useQuery(api.repuestos.obtener, { codigo });
+  const { codigo } = use(params); // ✅ unwrap Promise
+  const repuesto = useQuery(api.repuestos.obtener, { codigo });
   const actualizarRepuesto = useMutation(api.repuestos.actualizarRepuesto);
 
   // Estados del form
@@ -23,10 +26,8 @@ export default function EditarRepuestoPage({ params }: { params: Promise<{ codig
     modeloCompatible: "",
     categoria: "",
     ubicacion: "",
-    
   });
 
-  const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Cargar datos en el form
@@ -41,9 +42,7 @@ export default function EditarRepuestoPage({ params }: { params: Promise<{ codig
         modeloCompatible: repuesto.modeloCompatible ?? "",
         categoria: repuesto.categoria ?? "",
         ubicacion: repuesto.ubicacion ?? "",
-        
       });
-      
     }
   }, [repuesto]);
 
@@ -52,12 +51,10 @@ export default function EditarRepuestoPage({ params }: { params: Promise<{ codig
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: name === "stock" || name === "precioUnitario" ? Number(value) : value,
+      [name]:
+        name === "stock" || name === "precioUnitario" ? Number(value) : value,
     }));
   };
-
-  // Manejo de imagen
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,31 +86,126 @@ export default function EditarRepuestoPage({ params }: { params: Promise<{ codig
   if (repuesto === null) return <p>No se encontró el repuesto</p>;
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow rounded-xl">
-      <h1 className="text-2xl font-bold mb-6">Editar repuesto</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Campos texto */}
-        <input type="text" name="nombre" value={form.nombre} onChange={handleChange} placeholder="Nombre" className="w-full p-2 border rounded" />
-        <input type="text" name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Descripción" className="w-full p-2 border rounded" />
-        <input type="number" name="stock" value={form.stock} onChange={handleChange} placeholder="Stock" className="w-full p-2 border rounded" />
-        <input type="number" name="precioUnitario" value={form.precioUnitario} onChange={handleChange} placeholder="Precio" className="w-full p-2 border rounded" />
-        <input type="text" name="marca" value={form.marca} onChange={handleChange} placeholder="Marca" className="w-full p-2 border rounded" />
-        <input type="text" name="modeloCompatible" value={form.modeloCompatible} onChange={handleChange} placeholder="Modelo" className="w-full p-2 border rounded" />
-        <input type="text" name="categoria" value={form.categoria} onChange={handleChange} placeholder="Categoría" className="w-full p-2 border rounded" />
-        <input type="text" name="ubicacion" value={form.ubicacion} onChange={handleChange} placeholder="Ubicación" className="w-full p-2 border rounded" />
+    <main className="p-6 max-w-3xl mx-auto">
+      <article className="border rounded-xl p-6 shadow-sm bg-white hover:shadow-md transition">
+        <h1 className="text-2xl font-bold mb-6 text-slate-800">
+          ✏️ Editar repuesto
+        </h1>
 
-     
-        
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div className="flex flex-wrap gap-5">
+            <Field label="Nombre">
+              <Input
+                name="nombre"
+                value={form.nombre}
+                onChange={handleChange}
+                required
+              />
+            </Field>
+            <Field label="Descripción" className="flex-1 min-w-[250px]">
+              <Input
+                name="descripcion"
+                value={form.descripcion}
+                onChange={handleChange}
+              />
+            </Field>
+            <Field label="Stock">
+              <Input
+                type="number"
+                name="stock"
+                value={form.stock}
+                onChange={handleChange}
+                required
+              />
+            </Field>
+            <Field label="Precio Unitario">
+              <Input
+                type="number"
+                name="precioUnitario"
+                value={form.precioUnitario}
+                onChange={handleChange}
+                required
+              />
+            </Field>
+            <Field label="Marca">
+              <Input
+                name="marca"
+                value={form.marca}
+                onChange={handleChange}
+              />
+            </Field>
+            <Field label="Modelo Compatible">
+              <Input
+                name="modeloCompatible"
+                value={form.modeloCompatible}
+                onChange={handleChange}
+              />
+            </Field>
+            <Field label="Categoría">
+              <Input
+                name="categoria"
+                value={form.categoria}
+                onChange={handleChange}
+              />
+            </Field>
+            <Field label="Ubicación">
+              <Input
+                name="ubicacion"
+                value={form.ubicacion}
+                onChange={handleChange}
+              />
+            </Field>
+          </div>
 
-        {/* Botón */}
-        <button
-          type="submit"
-          disabled={loading}
-          className={`px-4 py-2 rounded text-white ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
-        >
-          {loading ? "Guardando..." : "Guardar cambios"}
-        </button>
-      </form>
+          {/* Botón */}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`px-6 py-2.5 rounded-lg text-white font-semibold shadow transition ${
+                loading
+                  ? "bg-gray-400"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {loading ? "Guardando..." : "Guardar cambios"}
+            </button>
+          </div>
+        </form>
+      </article>
+    </main>
+  );
+}
+
+/* Helpers */
+function Field({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`flex flex-col flex-1 min-w-[200px] ${className}`}>
+      <label className="text-sm font-medium text-slate-700 mb-1">
+        {label}
+      </label>
+      {children}
     </div>
+  );
+}
+
+function Input({
+  type = "text",
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      type={type}
+      {...props}
+      className="border rounded-lg px-3 py-2 w-full text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+    />
   );
 }
