@@ -26,8 +26,8 @@ export default defineSchema({
     estado: v.string(),
     FechaUltimoMantenimiento: v.string(),
     ProximoMantenimiento: v.optional(v.string()),
-    ultimoServiceKm: v.number(),
-    serviceIntervalKm: v.number(),
+    ultimoServiceKm: v.optional(v.number()),
+    serviceIntervalKm: v.optional(v.number()), // En kilometrosv.number(),
   }).index("by_patente", ["patente"]),
 
   mantenimientos: defineTable({
