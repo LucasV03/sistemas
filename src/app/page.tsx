@@ -191,11 +191,14 @@ function Card({
   className?: string;
 }) {
   return (
-    <section className={`rounded-xl bg-white p-4 ring-1 ring-slate-200 shadow ${className}`}>
+    <section className={`rounded-xl bg-[#1e1e1e] p-4 shadow-md border border-gray-800 ${className}`}>
       <div className="mb-3">
-        <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+        <h2 className="text-lg font-semibold text-white">{title}</h2>
       </div>
-      {children}
+      <div className="text-gray-300">
+        {children}
+      </div>
     </section>
   );
 }
+
