@@ -44,7 +44,7 @@ export const registrarMantenimiento = mutation({
   args: { vehiculoId: v.id("vehiculos"), fecha: v.string(), km: v.number() },
   handler: async (ctx, { vehiculoId, fecha, km }) => {
     await ctx.db.patch(vehiculoId, {
-      FechaUltimoMantenimiento: fecha,
+      FechaUltimoMantenimiento: fecha,     // YYYY-MM-DD
       ultimoServiceKm: Math.max(0, Math.floor(km)),
     });
   },
