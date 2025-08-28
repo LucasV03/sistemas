@@ -2,7 +2,10 @@
 
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+type SortKey = 'patente' | 'tipo' | 'km' | 'capacidad' | 'estado';
+type SortOrder = 'asc' | 'desc';
 
 export default function VehiculosPage() {
   const vehiculos = useQuery(api.vehiculos.listar);
@@ -11,6 +14,10 @@ export default function VehiculosPage() {
   const [patente, setPatente] = useState('');
   const [tipo, setTipo] = useState('');
   const [capacidad, setCapacidad] = useState<string>('');
+
+  // ➜ Estado de orden
+  const [sortKey, setSortKey] = useState<SortKey>('patente');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
   const loading = vehiculos === undefined;
   const data = vehiculos ?? [];
@@ -34,58 +41,98 @@ export default function VehiculosPage() {
     return { nextAtKm, remaining, tone };
   }
 
+  // ➜ Ordenamiento en memoria
+  const sortedData = useMemo(() => {
+    const toStr = (v: any) => String(v ?? '').toUpperCase();
+    const toNum = (v: any) => (Number.isFinite(Number(v)) ? Number(v) : 0);
+
+    return [...data].sort((a: any, b: any) => {
+      let A: any;
+      let B: any;
+
+      if (sortKey === 'km' || sortKey === 'capacidad') {
+        A = toNum(a[sortKey]);
+        B = toNum(b[sortKey]);
+      } else if (sortKey === 'estado') {
+        // estado puede venir null/undefined → tratamos como cadena
+        A = toStr(a.estado ?? '-');
+        B = toStr(b.estado ?? '-');
+      } else {
+        A = toStr(a[sortKey]);
+        B = toStr(b[sortKey]);
+      }
+
+      const cmp = A < B ? -1 : A > B ? 1 : 0;
+      return sortOrder === 'asc' ? cmp : -cmp;
+    });
+  }, [data, sortKey, sortOrder]);
+
+  function handleSort(key: SortKey) {
+    if (sortKey === key) setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'));
+    else {
+      setSortKey(key);
+      setSortOrder('asc');
+    }
+  }
+
   async function handleAddVehiculo(e: React.FormEvent) {
     e.preventDefault();
-
     const capNum = Number(capacidad);
     if (!patente.trim() || !tipo || !Number.isFinite(capNum) || capNum <= 0) {
       alert('Completá patente, tipo y una capacidad válida (>0).');
       return;
     }
-
     try {
       await addVehiculo({
         patente: patente.trim().toUpperCase().replace(/\s+/g, ''),
         tipo,
         capacidad: Math.floor(capNum),
       } as any);
-
-      setPatente('');
-      setTipo('');
-      setCapacidad('');
+      setPatente(''); setTipo(''); setCapacidad('');
     } catch (err: any) {
       console.error(err);
       alert(`Error al crear vehículo: ${err?.message ?? 'Ver consola de Convex'}`);
     }
   }
 
+  const arrow = (key: SortKey) =>
+    sortKey === key ? (sortOrder === 'asc' ? ' ▲' : ' ▼') : '';
+
   return (
     <main className="p-6 max-w-6xl mx-auto">
       <section className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-sm border border-neutral-200 dark:border-neutral-800">
-        <h2 className="text-3xl font-semibold mb-7 mt-3 text-neutral-100">
-          Vehículos
-        </h2>
+        <h2 className="text-3xl font-semibold mb-7 mt-3 text-neutral-100">Vehículos</h2>
 
         {loading ? (
           <p className="text-neutral-400">Cargando vehículos...</p>
-        ) : data.length === 0 ? (
+        ) : sortedData.length === 0 ? (
           <p className="text-rose-400">No hay vehículos registrados.</p>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-neutral-700">
             <table className="min-w-full table-fixed">
               <thead className="bg-slate-800 text-white text-sm">
                 <tr>
-                  <th className="px-4 py-2 text-left">Patente</th>
-                  <th className="px-4 py-2 text-left">Tipo</th>
-                  <th className="px-4 py-2 text-left">Capacidad</th>
-                  <th className="px-4 py-2 text-left">Estado</th>
-                  <th className="px-4 py-2 text-left">Kilometraje</th>
+                  <th className="px-4 py-2 text-left cursor-pointer" onClick={() => handleSort('patente')}>
+                    Patente{arrow('patente')}
+                  </th>
+                  <th className="px-4 py-2 text-left cursor-pointer" onClick={() => handleSort('tipo')}>
+                    Tipo{arrow('tipo')}
+                  </th>
+                  <th className="px-4 py-2 text-left cursor-pointer" onClick={() => handleSort('capacidad')}>
+                    Capacidad{arrow('capacidad')}
+                  </th>
+                  <th className="px-4 py-2 text-left cursor-pointer" onClick={() => handleSort('estado')}>
+                    Estado{arrow('estado')}
+                  </th>
+                  <th className="px-4 py-2 text-left cursor-pointer" onClick={() => handleSort('km')}>
+                    Kilometraje{arrow('km')}
+                  </th>
                   <th className="px-4 py-2 text-left">Último mantenimiento</th>
                   <th className="px-4 py-2 text-left">Próximo service</th>
                 </tr>
               </thead>
               <tbody className="text-sm text-neutral-200">
-                {data.map((v: any) => {
+                {sortedData.map((v: any) => {
                   const info = calcNextService(v);
                   const badge =
                     info.tone === 'ok'
@@ -128,7 +175,7 @@ export default function VehiculosPage() {
 
             <input
               type="text"
-              placeholder="Patente (ej: AB123CD)"
+              placeholder="Patente"
               className="border bg-neutral-900 border-neutral-700 rounded px-3 py-2 w-full"
               value={patente}
               onChange={(e) => setPatente(e.target.value)}
