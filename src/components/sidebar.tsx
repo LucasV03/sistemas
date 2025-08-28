@@ -28,7 +28,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navegación */}
-      <nav className="flex flex-col gap-6 mt-8 px-4">
+      <nav className="flex flex-col gap-2 mt-8">
         {links.map(({ href, label, Icon }) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
           return (
@@ -36,21 +36,21 @@ export default function Sidebar() {
               key={href}
               href={href}
               className={[
-                "flex flex-col items-center justify-center rounded-md py-4 text-sm transition-colors relative",
+                "relative flex flex-col items-center justify-center py-4 text-sm transition-colors",
                 active
-                  ? "bg-[#111111] text-white"
-                  : "text-gray-400 hover:text-white hover:bg-[#2a2a2a]"
+                  ? "bg-[#141414] text-white"
+                  : "text-gray-400 hover:text-white hover:bg-[#1f1f1f]"
               ].join(" ")}
             >
+              {/* Línea morada en el lado izquierdo del activo */}
+              {active && (
+                <span className="absolute left-0 top-0 h-full w-1 bg-violet-500"></span>
+              )}
+
               {/* Icono más grande */}
-              <Icon className="h-8 w-8 mb-1" />  
+              <Icon className="h-7 w-7 mb-1" />  
               {/* Texto debajo */}
               <span className="text-xs">{label}</span>  
-
-              {/* Banda lateral violeta que se extiende a la derecha */}
-              {active && (
-                <span className="absolute inset-y-0 right-0 w-screen bg-[#111111] -z-10"></span>
-              )}
             </Link>
           );
         })}
