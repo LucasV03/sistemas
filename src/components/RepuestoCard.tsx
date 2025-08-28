@@ -17,7 +17,7 @@ export default function RepuestoCard({
       className="
         border border-neutral-200 dark:border-neutral-700
         rounded-xl p-5 shadow-sm
-        bg-gray-100 dark:bg-neutral-800   // 👈 fondo gris claro
+        bg-white dark:bg-neutral-900
         hover:shadow-md transition
         flex flex-col justify-between
       "
