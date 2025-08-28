@@ -1,3 +1,4 @@
+// src/app/repuestos/[codigo]/editar/page.tsx
 "use client";
 
 import { useQuery, useMutation } from "convex/react";
@@ -16,7 +17,7 @@ export default function EditarRepuestoPage({
   const repuesto = useQuery(api.repuestos.obtener, { codigo });
   const actualizarRepuesto = useMutation(api.repuestos.actualizarRepuesto);
 
-  // Estados del form
+  // Estado del form
   const [form, setForm] = useState({
     nombre: "",
     descripcion: "",
@@ -27,10 +28,9 @@ export default function EditarRepuestoPage({
     categoria: "",
     ubicacion: "",
   });
-
   const [loading, setLoading] = useState(false);
 
-  // Cargar datos en el form
+  // Cargar datos al montar / actualizar query
   useEffect(() => {
     if (repuesto) {
       setForm({
@@ -46,8 +46,10 @@ export default function EditarRepuestoPage({
     }
   }, [repuesto]);
 
-  // Manejo de inputs de texto/numéricos
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handlers
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -58,20 +60,13 @@ export default function EditarRepuestoPage({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!form.nombre.trim()) {
       alert("El nombre es obligatorio ❌");
       return;
     }
-
     setLoading(true);
-
     try {
-      await actualizarRepuesto({
-        codigo,
-        ...form,
-      });
-
+      await actualizarRepuesto({ codigo, ...form });
       alert("Repuesto actualizado ✅");
       router.push("/repuestos");
     } catch (err) {
@@ -82,13 +77,26 @@ export default function EditarRepuestoPage({
     }
   };
 
-  if (repuesto === undefined) return <p>Cargando...</p>;
-  if (repuesto === null) return <p>No se encontró el repuesto</p>;
+  // Estados de carga
+  if (repuesto === undefined)
+    return (
+      <main className="p-6 max-w-3xl mx-auto">
+        <div className="h-32 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+      </main>
+    );
+  if (repuesto === null)
+    return (
+      <main className="p-6 max-w-3xl mx-auto">
+        <p className="text-rose-600 dark:text-rose-400">
+          No se encontró el repuesto.
+        </p>
+      </main>
+    );
 
   return (
     <main className="p-6 max-w-3xl mx-auto">
-      <article className="border rounded-xl p-6 shadow-sm bg-white hover:shadow-md transition">
-        <h1 className="text-2xl font-bold mb-6 text-slate-800">
+      <article className="border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm bg-white dark:bg-neutral-900 hover:shadow-md transition">
+        <h1 className="text-2xl font-bold mb-6 text-neutral-900 dark:text-neutral-100">
           ✏️ Editar repuesto
         </h1>
 
@@ -102,13 +110,16 @@ export default function EditarRepuestoPage({
                 required
               />
             </Field>
-            <Field label="Descripción" className="flex-1 min-w-[250px]">
-              <Input
+
+            <Field label="Descripción" className="flex-1 min-w-[260px]">
+              <Textarea
                 name="descripcion"
                 value={form.descripcion}
                 onChange={handleChange}
+                rows={3}
               />
             </Field>
+
             <Field label="Stock">
               <Input
                 type="number"
@@ -118,6 +129,7 @@ export default function EditarRepuestoPage({
                 required
               />
             </Field>
+
             <Field label="Precio Unitario">
               <Input
                 type="number"
@@ -127,13 +139,11 @@ export default function EditarRepuestoPage({
                 required
               />
             </Field>
+
             <Field label="Marca">
-              <Input
-                name="marca"
-                value={form.marca}
-                onChange={handleChange}
-              />
+              <Input name="marca" value={form.marca} onChange={handleChange} />
             </Field>
+
             <Field label="Modelo Compatible">
               <Input
                 name="modeloCompatible"
@@ -141,6 +151,7 @@ export default function EditarRepuestoPage({
                 onChange={handleChange}
               />
             </Field>
+
             <Field label="Categoría">
               <Input
                 name="categoria"
@@ -148,6 +159,7 @@ export default function EditarRepuestoPage({
                 onChange={handleChange}
               />
             </Field>
+
             <Field label="Ubicación">
               <Input
                 name="ubicacion"
@@ -157,15 +169,20 @@ export default function EditarRepuestoPage({
             </Field>
           </div>
 
-          {/* Botón */}
-          <div className="flex justify-end">
+          {/* Botonera */}
+          <div className="flex items-center justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+            >
+              Cancelar
+            </button>
             <button
               type="submit"
               disabled={loading}
               className={`px-6 py-2.5 rounded-lg text-white font-semibold shadow transition ${
-                loading
-                  ? "bg-gray-400"
-                  : "bg-blue-600 hover:bg-blue-700"
+                loading ? "bg-gray-400" : "bg-slate-800 hover:bg-slate-700"
               }`}
             >
               {loading ? "Guardando..." : "Guardar cambios"}
@@ -177,7 +194,8 @@ export default function EditarRepuestoPage({
   );
 }
 
-/* Helpers */
+/* ---------- Helpers ---------- */
+
 function Field({
   label,
   children,
@@ -188,8 +206,8 @@ function Field({
   className?: string;
 }) {
   return (
-    <div className={`flex flex-col flex-1 min-w-[200px] ${className}`}>
-      <label className="text-sm font-medium text-slate-700 mb-1">
+    <div className={`flex flex-col flex-1 min-w-[220px] ${className}`}>
+      <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
         {label}
       </label>
       {children}
@@ -199,13 +217,45 @@ function Field({
 
 function Input({
   type = "text",
+  className = "",
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       type={type}
       {...props}
-      className="border rounded-lg px-3 py-2 w-full text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      className={[
+        "border border-neutral-300 dark:border-neutral-700",
+        "bg-white dark:bg-neutral-900",
+        "text-neutral-900 dark:text-neutral-100",
+        "placeholder-neutral-400 dark:placeholder-neutral-500",
+        "caret-current",
+        "rounded-lg px-3 py-2 w-full text-sm shadow-sm",
+        "focus:ring-2 focus:ring-slate-500 focus:outline-none",
+        className,
+      ].join(" ")}
+    />
+  );
+}
+
+function Textarea({
+  className = "",
+  ...props
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      {...props}
+      className={[
+        "border border-neutral-300 dark:border-neutral-700",
+        "bg-white dark:bg-neutral-900",
+        "text-neutral-900 dark:text-neutral-100",
+        "placeholder-neutral-400 dark:placeholder-neutral-500",
+        "caret-current",
+        "rounded-lg px-3 py-2 w-full text-sm shadow-sm",
+        "focus:ring-2 focus:ring-slate-500 focus:outline-none",
+        "resize-y",
+        className,
+      ].join(" ")}
     />
   );
 }

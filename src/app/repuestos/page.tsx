@@ -1,3 +1,4 @@
+// src/app/repuestos/page.tsx
 "use client";
 
 import { useQuery, useMutation } from "convex/react";
@@ -30,9 +31,8 @@ export default function RepuestosPage() {
   const [fechaIngreso, setFechaIngreso] = useState("");
 
   // SORT
-  const [sortBy, setSortBy] = useState<
-    "codigo" | "nombre" | "categoria" | "vehiculo"
-  >("nombre");
+  const [sortBy, setSortBy] =
+    useState<"codigo" | "nombre" | "categoria" | "vehiculo">("nombre");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const norm = (s: any) =>
@@ -54,7 +54,7 @@ export default function RepuestosPage() {
     });
   }, [data, sortBy, sortDir]);
 
-  // HANDLERS
+  // HANDLER
   const handleAddRepuesto = async (e: React.FormEvent) => {
     e.preventDefault();
     await addRepuesto({
@@ -87,8 +87,36 @@ export default function RepuestosPage() {
 
   return (
     <main className="p-6 max-w-7xl mx-auto space-y-8">
-      <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200 shadow-lg">
-        <h2 className="text-3xl font-bold mb-6 text-slate-800">📦 Repuestos</h2>
+      <section className="rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-gray-100 dark:bg-neutral-800 p-6 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <h2 className="text-2xl md:text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
+            📦 Repuestos
+          </h2>
+
+          {/* Ordenar */}
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="text-sm text-neutral-600 dark:text-neutral-400">
+              Ordenar por:
+            </label>
+            <select
+              className="rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 px-2 py-1 text-sm"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+            >
+              <option value="nombre">Nombre</option>
+              <option value="codigo">Código</option>
+              <option value="categoria">Categoría</option>
+              <option value="vehiculo">Vehículo</option>
+            </select>
+            <button
+              onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+              className="rounded border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 px-3 py-1 text-sm"
+              title="Cambiar orden"
+            >
+              {sortDir === "asc" ? "Ascendente ▲" : "Descendente ▼"}
+            </button>
+          </div>
+        </div>
 
         {/* LISTADO */}
         {loading ? (
@@ -96,12 +124,12 @@ export default function RepuestosPage() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="h-36 bg-slate-100 rounded-xl animate-pulse"
+                className="h-36 bg-neutral-200 dark:bg-neutral-700 rounded-xl animate-pulse"
               />
             ))}
           </div>
         ) : repuestosOrdenados.length === 0 ? (
-          <p className="text-red-600 font-medium">
+          <p className="text-rose-600 dark:text-rose-400 font-medium">
             ⚠️ No hay repuestos registrados.
           </p>
         ) : (
@@ -117,87 +145,85 @@ export default function RepuestosPage() {
           </div>
         )}
 
-      
         {/* FORM */}
-<div className="mt-12">
-  <article className="border rounded-xl p-6 shadow-sm bg-white hover:shadow-md transition">
-    <h3 className="text-xl font-semibold mb-4 text-slate-800 flex items-center gap-2">
-      ➕ Agregar repuesto
-    </h3>
+        <div className="mt-12">
+          <article className="border border-neutral-300 dark:border-neutral-700 rounded-xl p-6 shadow-sm bg-gray-100 dark:bg-neutral-800 hover:shadow-md transition">
+            <h3 className="text-xl font-semibold mb-4 text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+              ➕ Agregar repuesto
+            </h3>
 
-    <form
-      onSubmit={handleAddRepuesto}
-      className="flex flex-col gap-5"
-    >
-      <div className="flex flex-wrap gap-5">
-        <Field label="Código">
-          <Input value={codigo} onChange={setCodigo} required />
-        </Field>
-        <Field label="Nombre">
-          <Input value={nombre} onChange={setNombre} required />
-        </Field>
-        <Field label="Descripción" className="flex-1 min-w-[250px]">
-          <Textarea value={descripcion} onChange={setDescripcion} />
-        </Field>
-        <Field label="Categoría">
-          <Input value={categoria} onChange={setCategoria} required />
-        </Field>
-        <Field label="Vehículo">
-          <Input value={vehiculo} onChange={setVehiculo} required />
-        </Field>
-        <Field label="Marca">
-          <Input value={marca} onChange={setMarca} />
-        </Field>
-        <Field label="Modelo Compatible">
-          <Input value={modeloCompatible} onChange={setModeloCompatible} />
-        </Field>
-        <Field label="Stock">
-          <Input
-            type="number"
-            value={stock}
-            onChange={setStock}
-            required
-          />
-        </Field>
-        <Field label="Precio Unitario">
-          <Input
-            type="number"
-            value={precioUnitario}
-            onChange={setPrecioUnitario}
-            required
-          />
-        </Field>
-        <Field label="Ubicación">
-          <Input value={ubicacion} onChange={setUbicacion} />
-        </Field>
-        <Field label="Fecha Ingreso">
-          <Input
-            type="date"
-            value={fechaIngreso}
-            onChange={setFechaIngreso}
-          />
-        </Field>
-      </div>
+            <form onSubmit={handleAddRepuesto} className="flex flex-col gap-5">
+              <div className="flex flex-wrap gap-5">
+                <Field label="Código">
+                  <Input value={codigo} onChange={setCodigo} required />
+                </Field>
+                <Field label="Nombre">
+                  <Input value={nombre} onChange={setNombre} required />
+                </Field>
+                <Field label="Descripción" className="flex-1 min-w-[250px]">
+                  <Textarea value={descripcion} onChange={setDescripcion} />
+                </Field>
+                <Field label="Categoría">
+                  <Input value={categoria} onChange={setCategoria} required />
+                </Field>
+                <Field label="Vehículo">
+                  <Input value={vehiculo} onChange={setVehiculo} required />
+                </Field>
+                <Field label="Marca">
+                  <Input value={marca} onChange={setMarca} />
+                </Field>
+                <Field label="Modelo Compatible">
+                  <Input
+                    value={modeloCompatible}
+                    onChange={setModeloCompatible}
+                  />
+                </Field>
+                <Field label="Stock">
+                  <Input
+                    type="number"
+                    value={stock}
+                    onChange={setStock}
+                    required
+                  />
+                </Field>
+                <Field label="Precio Unitario">
+                  <Input
+                    type="number"
+                    value={precioUnitario}
+                    onChange={setPrecioUnitario}
+                    required
+                  />
+                </Field>
+                <Field label="Ubicación">
+                  <Input value={ubicacion} onChange={setUbicacion} />
+                </Field>
+                <Field label="Fecha Ingreso">
+                  <Input
+                    type="date"
+                    value={fechaIngreso}
+                    onChange={setFechaIngreso}
+                  />
+                </Field>
+              </div>
 
-      {/* Botón */}
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
-        >
-          Guardar Repuesto
-        </button>
-      </div>
-    </form>
-  </article>
-</div>
-
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-slate-800 text-white font-semibold rounded-lg shadow hover:bg-slate-700 transition"
+                >
+                  Guardar Repuesto
+                </button>
+              </div>
+            </form>
+          </article>
+        </div>
       </section>
     </main>
   );
 }
 
-/* Helpers */
+/* ---------- Helpers ---------- */
+
 function Field({
   label,
   children,
@@ -209,12 +235,13 @@ function Field({
 }) {
   return (
     <div className={`flex flex-col flex-1 min-w-[220px] ${className}`}>
-      <label className="text-sm font-medium text-slate-700 mb-1">{label}</label>
+      <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+        {label}
+      </label>
       {children}
     </div>
   );
 }
-
 
 function Input({
   type = "text",
@@ -235,7 +262,15 @@ function Input({
         onChange(type === "number" ? Number(e.target.value) : e.target.value)
       }
       required={required}
-      className="border rounded-lg px-3 py-2 w-full text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      className="
+        border border-neutral-300 dark:border-neutral-700
+        bg-white dark:bg-neutral-900
+        text-neutral-900 dark:text-neutral-100
+        placeholder-neutral-400 dark:placeholder-neutral-500
+        caret-current
+        rounded-lg px-3 py-2 w-full text-sm shadow-sm
+        focus:ring-2 focus:ring-slate-500 focus:outline-none
+      "
     />
   );
 }
@@ -251,7 +286,17 @@ function Textarea({
     <textarea
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="border rounded-lg px-3 py-2 w-full text-sm shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      className="
+        border border-neutral-300 dark:border-neutral-700
+        bg-white dark:bg-neutral-900
+        text-neutral-900 dark:text-neutral-100
+        placeholder-neutral-400 dark:placeholder-neutral-500
+        caret-current
+        rounded-lg px-3 py-2 w-full text-sm shadow-sm
+        focus:ring-2 focus:ring-slate-500 focus:outline-none
+        resize-y
+      "
+      rows={3}
     />
   );
 }
