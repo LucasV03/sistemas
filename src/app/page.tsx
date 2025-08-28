@@ -1,15 +1,14 @@
 // src/app/page.tsx
 "use client";
 
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import type { Bus } from "../components/BusMap";
 
-// ⬇️ Import dinámico SIN SSR (clave para Leaflet/react-leaflet)
+// Import dinámico SIN SSR (Leaflet/react-leaflet)
 const BusMap = dynamic(() => import("../components/BusMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-[420px] w-full rounded-lg bg-slate-100 animate-pulse" />
+    <div className="h-[420px] w-full rounded-lg bg-slate-100 dark:bg-neutral-800 animate-pulse" />
   ),
 });
 
@@ -56,65 +55,85 @@ export default function Home() {
 
   const BUSES: Bus[] = [
     { id: "BUS-102", lat: -24.787, lng: -65.41, route: "A → B", speedKmH: 38, heading: 45, updatedAt: new Date().toISOString() },
-    { id: "BUS-088", lat: -24.80,  lng: -65.44, route: "C → D", speedKmH: 22, heading: 320, updatedAt: new Date().toISOString() },
+    { id: "BUS-088", lat: -24.8, lng: -65.44, route: "C → D", speedKmH: 22, heading: 320, updatedAt: new Date().toISOString() },
     { id: "BUS-031", lat: -24.775, lng: -65.43, route: "E → A", speedKmH: 41, heading: 190, updatedAt: new Date().toISOString() },
   ];
 
   return (
-    <main className="space-y-9">
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
       {/* Encabezado */}
-      <header className="shadow-xl/10 rounded-xl bg-slate-100 text-center">
-        <h1 className="text-3xl font-bold text-slate-900">Panel operativo</h1>
-        <p className="text-slate-950">Estado actual de flota, viajes e incidencias</p>
+      <header className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 text-center">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-neutral-900 dark:text-neutral-100">
+          Panel operativo
+        </h1>
+        <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400">
+          Estado actual de flota, viajes e incidencias
+        </p>
       </header>
 
-      {/* KPIs */}
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* KPIs (flex + wrap) */}
+      <section className="flex flex-wrap gap-4">
         {KPIS.map((k) => (
-          <div key={k.label} className="rounded-xl bg-white p-4 ring-1 ring-slate-200 shadow">
-            <div className="text-sm text-slate-500">{k.label}</div>
-            <div className="mt-1 text-2xl font-semibold text-slate-900">{k.value}</div>
+          <div
+            key={k.label}
+            className="
+              flex-1 basis-full sm:basis-[calc(50%-0.5rem)] lg:basis-[calc(25%-0.75rem)]
+              min-w-[220px]
+              rounded-xl border border-neutral-200 dark:border-neutral-800
+              bg-white dark:bg-neutral-900 p-4 shadow-sm
+            "
+          >
+            <div className="text-xs uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+              {k.label || "\u00A0"}
+            </div>
+            <div className="mt-1 text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+              {k.value}
+            </div>
           </div>
         ))}
       </section>
 
-      {/* Dos columnas principales */}
-      <section className="grid gap-6 xl:grid-cols-3 ">
-        {/* Columna grande */}
-        <div className="xl:col-span-2 space-y-3 ">
+      {/* Dos columnas con flex (col -> row en xl) */}
+      <section className="flex flex-col xl:flex-row gap-6">
+        {/* Columna principal */}
+        <div className="flex-1 flex flex-col gap-4">
           {/* Prioridades */}
           <Card title="Prioridades de hoy">
-            <ul className="list-disc pl-5 space-y-1 text-slate-700">
+            <ul className="list-disc pl-5 space-y-1 text-neutral-700 dark:text-neutral-300">
               {PRIORIDADES.map((t, i) => <li key={i}>{t}</li>)}
             </ul>
           </Card>
 
           {/* Salidas próximas */}
           <Card title="Salidas próximas (hoy)">
-            <div className="max-h-36 overflow-y-auto rounded border">
+            <div className="max-h-40 overflow-y-auto rounded border border-neutral-200 dark:border-neutral-800">
               <table className="min-w-full text-sm">
-                <thead className="sticky top-0 bg-slate-50 text-slate-500 text-xs">
+                <thead className="sticky top-0 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-500 dark:text-neutral-400 text-xs">
                   <tr>
-                    <th className="px-3 py-2 text-left">Unidad</th>
-                    <th className="px-3 py-2 text-left">Ruta</th>
-                    <th className="px-3 py-2 text-left">Salida</th>
-                    <th className="px-3 py-2 text-left">Estado</th>
+                    <Th>Unidad</Th>
+                    <Th>Ruta</Th>
+                    <Th>Salida</Th>
+                    <Th>Estado</Th>
                   </tr>
                 </thead>
                 <tbody>
                   {VIAJES_HOY.map((v, i) => (
-                    <tr key={i} className="border-t">
-                      <td className="px-3 py-2 font-medium text-slate-900">{v.unidad}</td>
-                      <td className="px-3 py-2">{v.ruta}</td>
-                      <td className="px-3 py-2">{v.salida}</td>
-                      <td className="px-3 py-2">
-                        <span className={[
-                          "rounded-full px-2 py-0.5 text-xs",
-                          v.estado.includes("Demora") ? "bg-amber-100 text-amber-700 ring-1 ring-amber-200" :
-                          v.estado.includes("Reasignado") ? "bg-slate-100 text-slate-700 ring-1 ring-slate-200" :
-                          "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200"
-                        ].join(" ")}>{v.estado}</span>
-                      </td>
+                    <tr key={i} className="border-t border-neutral-200 dark:border-neutral-800">
+                      <Td className="font-medium text-neutral-900 dark:text-neutral-100">{v.unidad}</Td>
+                      <Td>{v.ruta}</Td>
+                      <Td>{v.salida}</Td>
+                      <Td>
+                        <span
+                          className={[
+                            "rounded-full px-2 py-0.5 text-xs ring-1",
+                            v.estado.includes("Demora") ? "bg-amber-100 text-amber-700 ring-amber-200" :
+                            v.estado.includes("Reasignado") ? "bg-neutral-100 text-neutral-700 ring-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700" :
+                            "bg-emerald-100 text-emerald-700 ring-emerald-200"
+                          ].join(" ")}
+                        >
+                          {v.estado}
+                        </span>
+                      </Td>
                     </tr>
                   ))}
                 </tbody>
@@ -122,20 +141,23 @@ export default function Home() {
             </div>
           </Card>
 
-          {/* Incidencias y Personal */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <Card title="Incidencias" className="h-full">
-              <ul className="space-y-1 text-sm">
+          {/* Incidencias + Personal (flex responsivo) */}
+          <div className="flex flex-wrap gap-4">
+            <Card
+              title="Incidencias"
+              className="flex-1 basis-full md:basis-[calc(50%-0.5rem)] min-w-[260px]"
+            >
+              <ul className="space-y-2 text-sm">
                 {INCIDENCIAS.map((i, idx) => (
-                  <li key={idx} className="rounded-lg border p-2">
+                  <li key={idx} className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-2">
                     <span
                       className={[
-                        "mr-2 rounded px-2 py-0.5 text-xs",
+                        "mr-2 rounded px-2 py-0.5 text-xs ring-1",
                         i.sev === "Alta"
-                          ? "bg-rose-100 text-rose-700 ring-1 ring-rose-200"
+                          ? "bg-rose-100 text-rose-700 ring-rose-200"
                           : i.sev === "Media"
-                          ? "bg-amber-100 text-amber-700 ring-1 ring-amber-200"
-                          : "bg-slate-100 text-slate-700 ring-1 ring-slate-200",
+                          ? "bg-amber-100 text-amber-700 ring-amber-200"
+                          : "bg-neutral-100 text-neutral-700 ring-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700",
                       ].join(" ")}
                     >
                       {i.sev}
@@ -144,42 +166,50 @@ export default function Home() {
                   </li>
                 ))}
                 {INCIDENCIAS.length === 0 && (
-                  <li className="text-slate-500">Sin incidencias.</li>
+                  <li className="text-neutral-500 dark:text-neutral-400">Sin incidencias.</li>
                 )}
               </ul>
             </Card>
 
-            <Card title="Personal" className="h-full">
-              <ul className="list-disc pl-4 space-y-2 text-sm text-slate-700">
-                {PERSONAL.map((t, i) => (
-                  <li key={i}>{t}</li>
-                ))}
+            <Card
+              title="Personal"
+              className="flex-1 basis-full md:basis-[calc(50%-0.5rem)] min-w-[260px]"
+            >
+              <ul className="list-disc pl-5 space-y-2 text-sm text-neutral-700 dark:text-neutral-300">
+                {PERSONAL.map((t, i) => <li key={i}>{t}</li>)}
               </ul>
             </Card>
           </div>
         </div>
 
         {/* Columna lateral */}
-        <div className="space-y-12 w-130">
+        <aside className="w-full xl:w-96 flex flex-col gap-6">
           <Card title="Mapa — flota en vivo">
-            <BusMap buses={BUSES} />
+            <div className="h-[420px]">
+              <BusMap buses={BUSES} />
+            </div>
           </Card>
+
           <Card title="Flota — fuera de servicio">
             <ul className="space-y-2 text-sm">
               {FUERA_SERVICIO.map((u) => (
-                <li key={u.unidad} className="flex justify-between rounded-lg border p-2">
-                  <span className="font-medium text-slate-900">{u.unidad}</span>
-                  <span className="text-slate-600">{u.motivo} — {u.estado}</span>
+                <li key={u.unidad} className="flex items-center justify-between rounded-lg border border-neutral-200 dark:border-neutral-800 p-2">
+                  <span className="font-medium text-neutral-900 dark:text-neutral-100">{u.unidad}</span>
+                  <span className="text-neutral-600 dark:text-neutral-300">{u.motivo} — {u.estado}</span>
                 </li>
               ))}
-              {FUERA_SERVICIO.length === 0 && <li className="text-slate-500">Sin novedades.</li>}
+              {FUERA_SERVICIO.length === 0 && (
+                <li className="text-neutral-500 dark:text-neutral-400">Sin novedades.</li>
+              )}
             </ul>
           </Card>
-        </div>
+        </aside>
       </section>
     </main>
   );
 }
+
+/* ---------- UI helpers minimalistas ---------- */
 
 function Card({
   title,
@@ -191,14 +221,43 @@ function Card({
   className?: string;
 }) {
   return (
-    <section className={`rounded-xl bg-[#1e1e1e] p-4 shadow-md border border-gray-800 ${className}`}>
+    <section
+      className={[
+        "rounded-xl border border-neutral-200 dark:border-neutral-800",
+        "bg-white dark:bg-neutral-900 p-4 shadow-sm",
+        className,
+      ].join(" ")}
+    >
       <div className="mb-3">
-        <h2 className="text-lg font-semibold text-white">{title}</h2>
+        <h2 className="text-base sm:text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+          {title}
+        </h2>
       </div>
-      <div className="text-gray-300">
+      <div className="text-neutral-700 dark:text-neutral-300">
         {children}
       </div>
     </section>
   );
 }
 
+function Th({ children }: { children: React.ReactNode }) {
+  return (
+    <th className="px-3 py-2 text-left font-medium">
+      {children}
+    </th>
+  );
+}
+
+function Td({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <td className={["px-3 py-2 text-neutral-700 dark:text-neutral-300", className].join(" ")}>
+      {children}
+    </td>
+  );
+}
