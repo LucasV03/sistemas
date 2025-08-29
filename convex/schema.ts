@@ -22,9 +22,9 @@ export default defineSchema({
     patente: v.string(),
     tipo: v.string(),
     capacidad: v.number(),
-    km:v.optional(v.number()), 
+    km: v.optional(v.number()), 
     estado: v.optional(v.string()),
-    FechaUltimoMantenimiento:v.optional(v.string()),
+    FechaUltimoMantenimiento: v.optional(v.string()),
     ProximoMantenimiento: v.optional(v.string()),
     ultimoServiceKm: v.optional(v.number()),
     serviceIntervalKm: v.optional(v.number()), // En kilometrosv.number(),
@@ -125,4 +125,16 @@ export default defineSchema({
     estado: v.optional(v.string()),
     ts: v.number(),
   }).index("byUnidadId", ["unidadId"]),
+
+  proveedores: defineTable({
+    nombre: v.string(),
+    contacto_principal: v.string(),
+    telefono: v.string(),
+    email: v.string(),
+    direccion: v.string(),
+    activo: v.boolean(), // true = activo, false = inactivo
+    reputacion: v.optional(v.number()), // rating 1–5 opcional
+    productos_ofrecidos: v.array(v.id("repuestos")), // relación con repuestos
+    notas: v.optional(v.string()),
+  }),
 });

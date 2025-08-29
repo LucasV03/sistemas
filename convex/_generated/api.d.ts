@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as empleados from "../empleados.js";
+import type * as proveedores from "../proveedores.js";
 import type * as reportes from "../reportes.js";
 import type * as repuestos from "../repuestos.js";
 import type * as usuarios from "../usuarios.js";
@@ -30,6 +31,7 @@ import type * as viajes from "../viajes.js";
  */
 declare const fullApi: ApiFromModules<{
   empleados: typeof empleados;
+  proveedores: typeof proveedores;
   reportes: typeof reportes;
   repuestos: typeof repuestos;
   usuarios: typeof usuarios;
