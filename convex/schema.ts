@@ -3,6 +3,16 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+<<<<<<< Updated upstream
+=======
+  usuarios: defineTable({
+    nombre: v.string(),
+    apellido: v.optional(v.string()),
+    email: v.string(),
+    password: v.optional(v.string()),
+    rol: v.string(),
+  }),
+>>>>>>> Stashed changes
 
     usuarios: defineTable({
       nombre: v.string(),
@@ -27,6 +37,7 @@ export default defineSchema({
     capacidad: v.number(),
     estado: v.string(), // disponible, en viaje, mantenimiento
     km: v.number(),
+<<<<<<< Updated upstream
     FechaUltimoMantenimiento: v.string(), 
   }),
 
@@ -37,6 +48,43 @@ export default defineSchema({
     destino: v.string(),
     fecha: v.string(), // formato YYYY-MM-DD
   }),
+=======
+    estado: v.string(),
+    FechaUltimoMantenimiento: v.string(),
+    ProximoMantenimiento: v.optional(v.string()),
+    ultimoServiceKm: v.optional(v.number()),
+    serviceIntervalKm: v.optional(v.number()), // en kilómetros
+  }).index("by_patente", ["patente"]),
+
+  mantenimientos: defineTable({
+    vehiculoId: v.id("vehiculos"),
+    km: v.number(),
+    fecha: v.string(), // YYYY-MM-DD
+  }).index("byVehiculoFecha", ["vehiculoId", "fecha"]),
+
+viajes: defineTable({
+  vehiculoId: v.id("vehiculos"),
+  choferId: v.union(v.id("usuarios"), v.id("empleados")), // ✅ acepta de ambos
+  origen: v.string(),
+  destino: v.string(),
+  ruta: v.string(),
+  salidaProgramada: v.number(),
+  estado: v.union(
+    v.literal("Programado"),
+    v.literal("En curso"),
+    v.literal("Demorado"),
+    v.literal("Cancelado"),
+    v.literal("Completado")
+  ),
+  retrasoMin: v.optional(v.number()),
+  notas: v.optional(v.string()),
+})
+  .index("by_salidaProgramada", ["salidaProgramada"])
+  .index("by_estado", ["estado"])
+  .index("by_vehiculo", ["vehiculoId"])
+  .index("by_chofer", ["choferId"]),
+
+>>>>>>> Stashed changes
 
   repuestos: defineTable({
     codigo: v.string(),              // Código interno o SKU
