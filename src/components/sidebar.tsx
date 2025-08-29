@@ -48,9 +48,9 @@ export default function Sidebar() {
               )}
 
               {/* Icono más grande */}
-              <Icon className="h-7 w-7 mb-1" />  
+              <Icon className="h-10 w-10 mb-1" />  
               {/* Texto debajo */}
-              <span className="text-xs">{label}</span>  
+              <span className="text-base">{label}</span>  
             </Link>
           );
         })}
