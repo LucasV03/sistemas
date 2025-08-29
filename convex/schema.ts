@@ -2,13 +2,16 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  usuarios: defineTable({
-    nombre: v.string(),
-    apellido: v.optional(v.string()),
-    email: v.string(),
-    password: v.optional(v.string()),
-    rol: v.string()
-  }),
+
+
+    usuarios: defineTable({
+      nombre: v.string(),
+      apellido: v.optional(v.string()),
+      email: v.string(),
+      password: v.optional(v.string()),
+      rol: v.string()
+    }),
+
 
   empleados: defineTable({
     nombre: v.string(),
@@ -33,16 +36,37 @@ export default defineSchema({
   mantenimientos: defineTable({
     vehiculoId: v.id("vehiculos"),
     km: v.number(),
-    fecha: v.string(), // YYYY-MM-DD
+    fecha: v.optional(v.string()), // YYYY-MM-DD
+    FechaUltimoMantenimiento: v.optional(v.string()),
   }).index("byVehiculoFecha", ["vehiculoId", "fecha"]),
 
-  viajes: defineTable({
-    vehiculoId: v.id("vehiculos"),
-    choferId: v.id("usuarios"),
-    origen: v.string(),
-    destino: v.string(),
-    fecha: v.string(),
-  }),
+  
+
+  
+
+viajes: defineTable({
+  vehiculoId: v.id("vehiculos"),
+  choferId:v.optional(v.id("empleados")), 
+  origen: v.string(),
+  destino: v.string(),
+  ruta: v.string(),
+  salidaProgramada: v.number(),
+  estado: v.union(
+    v.literal("Programado"),
+    v.literal("En curso"),
+    v.literal("Demorado"),
+    v.literal("Cancelado"),
+    v.literal("Completado")
+  ),
+  retrasoMin: v.optional(v.number()),
+  notas: v.optional(v.string()),
+  fecha: v.optional(v.string()),
+})
+  .index("by_salidaProgramada", ["salidaProgramada"])
+  .index("by_estado", ["estado"])
+  .index("by_vehiculo", ["vehiculoId"])
+  .index("by_chofer", ["choferId"]),
+
 
   repuestos: defineTable({
     codigo: v.string(),
