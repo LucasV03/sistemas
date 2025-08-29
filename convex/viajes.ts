@@ -17,8 +17,8 @@ export type Estado =
   | "Cancelado"
   | "Completado";
 
-// ✅ Aceptar choferes desde "usuarios" o "empleados"
-const vChoferId = v.union(v.id("usuarios"), v.id("empleados"));
+
+const vChoferId = v.id("empleados");
 
 /**
  * Crear viaje

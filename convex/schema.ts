@@ -46,7 +46,7 @@ export default defineSchema({
 
 viajes: defineTable({
   vehiculoId: v.id("vehiculos"),
-  choferId: v.union(v.id("usuarios"), v.id("empleados")), // ✅ acepta de ambos
+  choferId:v.optional(v.id("empleados")), 
   origen: v.string(),
   destino: v.string(),
   ruta: v.string(),
