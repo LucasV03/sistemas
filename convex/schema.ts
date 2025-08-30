@@ -30,13 +30,13 @@ export default defineSchema({
     FechaUltimoMantenimiento: v.optional(v.string()),
     ProximoMantenimiento: v.optional(v.string()),
     ultimoServiceKm: v.optional(v.number()),
-    serviceIntervalKm: v.optional(v.number()), // En kilometrosv.number(),
+    serviceIntervalKm: v.optional(v.number()), 
   }).index("by_patente", ["patente"]),
 
   mantenimientos: defineTable({
     vehiculoId: v.id("vehiculos"),
     km: v.number(),
-    fecha: v.optional(v.string()), // YYYY-MM-DD
+    fecha: v.optional(v.string()), 
     FechaUltimoMantenimiento: v.optional(v.string()),
   }).index("byVehiculoFecha", ["vehiculoId", "fecha"]),
 
@@ -156,9 +156,9 @@ viajes: defineTable({
     telefono: v.string(),
     email: v.string(),
     direccion: v.string(),
-    activo: v.boolean(), // true = activo, false = inactivo
-    reputacion: v.optional(v.number()), // rating 1–5 opcional
-    productos_ofrecidos: v.array(v.id("repuestos")), // relación con repuestos
+    activo: v.boolean(), 
+    reputacion: v.optional(v.number()), 
+    productos_ofrecidos: v.array(v.id("repuestos")), 
     notas: v.optional(v.string()),
   }),
 });

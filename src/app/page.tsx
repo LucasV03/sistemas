@@ -1,10 +1,10 @@
-// src/app/page.tsx
+
 "use client";
 
 import dynamic from "next/dynamic";
 import type { Bus } from "../components/BusMap";
 
-// Import dinámico SIN SSR (Leaflet/react-leaflet)
+
 const BusMap = dynamic(() => import("../components/BusMap"), {
   ssr: false,
   loading: () => (
@@ -13,7 +13,7 @@ const BusMap = dynamic(() => import("../components/BusMap"), {
 });
 
 export default function Home() {
-  // --- Mock estático (reemplazar luego) ---
+  
   const KPIS = [
     { label: "Unidades activas", value: "42 / 58" },
     { label: "Puntualidad", value: "92%" },
@@ -209,7 +209,7 @@ export default function Home() {
   );
 }
 
-/* ---------- UI helpers minimalistas ---------- */
+
 
 function Card({
   title,

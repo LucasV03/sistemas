@@ -8,7 +8,7 @@ export default function Home() {
     const usuarios = useQuery(api.usuarios.listar, {});
     const addUsuario = useMutation(api.usuarios.crear);
 
-    // Estados del formulario
+    
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
     const [email, setEmail] = useState("");
