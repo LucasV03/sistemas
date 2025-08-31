@@ -1,3 +1,3 @@
-export default function clientesLayout({ children }: { children: React.ReactNode }) {
+export default function ClientsLayout({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
 }   
