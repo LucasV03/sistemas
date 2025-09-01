@@ -1,9 +1,11 @@
 Luego de clonar el repo correr:
 
 
-npm ci            # (opcional, pero recomendable si recién clonaste)
+npm ci     
+
 Después:
-npm run dev       # <-- ESTE es el correcto para Next.js
+
+npm run dev       
 
 Por útlimo:
 npx convex dev
