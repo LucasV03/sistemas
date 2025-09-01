@@ -161,4 +161,84 @@ viajes: defineTable({
     productos_ofrecidos: v.array(v.id("repuestos")), 
     notas: v.optional(v.string()),
   }),
+    // ===== CRM =====
+  clientes: defineTable({
+    nombre: v.string(),
+    correo: v.string(),
+    telefono: v.optional(v.string()),
+    empresa: v.optional(v.string()),
+    notas: v.optional(v.string()),
+    creadoPor: v.optional(v.string()),
+    creadoEn: v.number(),
+  })
+  .index("por_correo", ["correo"])
+  .index("por_nombre", ["nombre"]),
+
+  // Contratos (compat: campos de archivo opcionales para datos viejos)
+  contratos: defineTable({
+    clienteId: v.id("clientes"),
+    titulo: v.string(),
+    fechaInicio: v.string(),
+    fechaFin: v.optional(v.string()),
+    monto: v.number(),
+    estado: v.string(),
+    notas: v.optional(v.string()),
+    creadoEn: v.number(),
+    archivoId: v.optional(v.id("_storage")),
+    archivoNombre: v.optional(v.string()),
+    archivoTipo: v.optional(v.string()),
+    archivoTamanio: v.optional(v.number()),
+  })
+  .index("por_cliente", ["clienteId"])
+  .index("por_estado", ["estado"]),
+
+  interacciones: defineTable({
+    clienteId: v.id("clientes"),
+    contratoId: v.optional(v.id("contratos")),
+    tipo: v.string(),
+    resumen: v.string(),
+    proximaAccion: v.optional(v.string()),
+    creadoEn: v.number(),
+  })
+  .index("por_cliente", ["clienteId"])
+  .index("por_contrato", ["contratoId"])
+  .index("por_proximaAccion", ["proximaAccion"]),
+
+  // Adjuntos múltiples por contrato
+  contratos_adjuntos: defineTable({
+    contratoId: v.id("contratos"),
+    archivoId: v.id("_storage"),
+    nombre: v.optional(v.string()),
+    tipo: v.optional(v.string()),
+    tamanio: v.optional(v.number()),
+    subidoEn: v.number(),
+  })
+  .index("por_contrato", ["contratoId"]),
+
+  // Historial de contratos (cambios + snapshot de adjuntos)
+  contratos_historial: defineTable({
+    contratoId: v.id("contratos"),
+    cambiadoEn: v.number(),
+    estadoAnterior: v.optional(v.string()),
+    montoAnterior: v.optional(v.number()),
+    fechaInicioAnterior: v.optional(v.string()),
+    fechaFinAnterior: v.optional(v.string()),
+    notasAnteriores: v.optional(v.string()),
+    // 'actualizar' | 'agregar_adjunto' | 'agregar_adjuntos' | 'eliminar_adjunto'
+    tipoCambio: v.optional(v.string()),
+    adjuntosAnteriores: v.optional(
+      v.array(
+        v.object({
+          archivoId: v.id("_storage"),
+          nombre: v.optional(v.string()),
+          tipo: v.optional(v.string()),
+          tamanio: v.optional(v.number()),
+        })
+      )
+    ),
+  })
+  .index("por_contrato", ["contratoId"]),
+
 });
+
+
