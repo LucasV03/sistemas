@@ -579,7 +579,7 @@ async function subirYAgregarAdjuntos() {
                   {new Date(i.creadoEn).toLocaleString()} • {i.tipo}
                 </div>
                 <div className="text-black">{i.resumen}</div>
-                {i.proximaAccion && <div className="text-xs text-gray-600">Próxima acción: {i.proximaAccion}</div>}
+                {i.proximaAccion && <div className="text-xs text-gray-600">Fecha de interacción: {i.proximaAccion}</div>}
               </div>
               <div className="flex gap-2">
                 <button
